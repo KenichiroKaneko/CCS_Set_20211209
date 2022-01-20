@@ -1,0 +1,3 @@
+load('vars_exp')
+[a] = cal_inter(PARAM, FFout, ExtCOIL, ...
+    SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, WALL);
