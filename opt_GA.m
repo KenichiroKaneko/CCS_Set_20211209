@@ -105,7 +105,7 @@ classdef opt_GA < handle
             % トーナメント選択
             i = 1;
             while i <= obj.N
-                box = 4;
+                box = 2;
                 win = 1;
                 rands = [];
                 offspring_errs = [];
@@ -139,7 +139,13 @@ classdef opt_GA < handle
         function err = opt_getErr2(obj, temp)
             BZ_i = find(temp.gene(1 : temp.BZ_gene_num) == 1);
             FL_i = find(temp.gene(temp.BZ_gene_num+1 : end) == 1);
-            err = (abs(30 - sum([BZ_i FL_i])))+abs(length([BZ_i FL_i]) - 10);
+            err1 = (abs(30 - sum([BZ_i FL_i])));
+            if length([BZ_i FL_i]) < 10
+                err2 = 100;
+            else
+                err2 = length([BZ_i FL_i]) - 10;
+            end
+            err = err1 + err2;
         end
 
         function printStatus(obj, i)

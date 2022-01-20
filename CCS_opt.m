@@ -51,7 +51,7 @@ disp([err_t BZ_t FL_t]);
 
 state = '1月18日の深夜にスタートした50個の遺伝子を4000代までやったやつ';
 
-save('vars_GA_0118')
+% save('vars_GA_0118')
 % error('error description', A1)
 
 

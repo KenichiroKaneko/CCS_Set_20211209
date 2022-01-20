@@ -28,11 +28,11 @@ classdef opt_Chromosome < handle & matlab.mixin.Copyable
         %  遺伝子数
         L = opt_Chromosome.BZ_gene_num + opt_Chromosome.FL_gene_num;
         % 突然変異率
-        M_rate = 0.005;
+        M_rate = 0.004;
         % 交叉率
-        C_rate = 0.1;
+        C_rate = 0.05;
         % 特殊交叉率
-        X_rate = 0.001;
+        X_rate = 0.05;
     end
 
     properties (Constant = false)
@@ -80,20 +80,22 @@ classdef opt_Chromosome < handle & matlab.mixin.Copyable
                 x = obj.BZ_1gene_num - sum(obj.gene(range));
                 if x < 0
                     gene_type = 1;
+                    obj = chromo_mdfy(obj, gene_type, abs(x), range, 'BZ');
                 elseif x > 0
                     gene_type = 0;
+                    % obj = chromo_mdfy(obj, gene_type, abs(x), range, 'BZ');
                 end
-                obj = chromo_mdfy(obj, gene_type, abs(x), range, 'BZ');
             end
             range = obj.BZ_gene_num+1 : obj.L;
             if sum(obj.gene(range)) ~= obj.FL_1gene_num
                 x = obj.FL_1gene_num - sum(obj.gene(range));
                 if x < 0
                     gene_type = 1;
+                    obj = chromo_mdfy(obj, gene_type, abs(x), range, 'FL');
                 elseif x > 0
                     gene_type = 0;
+                    % obj = chromo_mdfy(obj, gene_type, abs(x), range, 'FL');
                 end
-                obj = chromo_mdfy(obj, gene_type, abs(x), range, 'FL');
             end
         end
 
