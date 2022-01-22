@@ -30,9 +30,9 @@ for fileNum = 1:length(filenames)
     param.Name = filenames(fileNum);
     param.Nz = 2033;
     param.Nr = 602;
-    % param.Nz = 401;
     param.Nz = Nz_list(fileNum);
-    % param.Nr = 201;
+    param.Nz = 401;
+    param.Nr = 201;
     param.Nz_orig = param.Nz;
     param.Nr_orig = param.Nr;
     param.zmin = -0.9985;
@@ -125,10 +125,11 @@ for fileNum = 1:length(filenames)
         end
 
         if error < param.errormax
-            param.routine_num = param.routine_num + i;
-            param.err(param.routine_num) = error;
             disp(['Convergence! Iteration number is ' num2str(param.routine_num)]);
             break
+        else
+            param.routine_num = param.routine_num + 1;
+            param.err(param.routine_num) = error;
         end
 
     end
@@ -158,9 +159,9 @@ for fileNum = 1:length(filenames)
     axis equal
 
     figure()
-    plot(param.err)
+    semilogy(param.err)
 
-    save('vars_gs_temp');
+    % save('vars_gs_temp');
     % gs2ccs(param, env3c, vars);
 
 end
@@ -532,10 +533,11 @@ function [param, psi, mu_jt, p, Ip] = sub_routine(param, divz, divr, psi, mu_jt,
         end
 
         if error < param.errormax
-            param.routine_num = param.routine_num + i;
-            param.err(param.routine_num) = error;
             disp(['  Sub routine finished at ' num2str(param.routine_num)]);
             break
+        else
+            param.routine_num = param.routine_num + 1;
+            param.err(param.routine_num) = error;
         end
 
     end
