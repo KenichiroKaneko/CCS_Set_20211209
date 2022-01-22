@@ -83,7 +83,7 @@ classdef opt_Chromosome < handle & matlab.mixin.Copyable
                     obj = chromo_mdfy(obj, gene_type, abs(x), range, 'BZ');
                 elseif x > 0
                     gene_type = 0;
-                    % obj = chromo_mdfy(obj, gene_type, abs(x), range, 'BZ');
+                    obj = chromo_mdfy(obj, gene_type, abs(x), range, 'BZ');
                 end
             end
             range = obj.BZ_gene_num+1 : obj.L;
@@ -94,7 +94,7 @@ classdef opt_Chromosome < handle & matlab.mixin.Copyable
                     obj = chromo_mdfy(obj, gene_type, abs(x), range, 'FL');
                 elseif x > 0
                     gene_type = 0;
-                    % obj = chromo_mdfy(obj, gene_type, abs(x), range, 'FL');
+                    obj = chromo_mdfy(obj, gene_type, abs(x), range, 'FL');
                 end
             end
         end

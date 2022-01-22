@@ -26,7 +26,7 @@ function [PARAM, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, POS] = make_sensor(PARA
     [Bz_EF_at_sensor_b, Psi_EF_at_sensor_b] = EF_calc_for_CCS_probe(SENSOR_TPRB.R, SENSOR_TPRB.Z, 1, 40, EF_voltage);
     
     % BZ
-    SENSOR_TPRB.TET = atan2(BZ, BR); % Theta センサーの角度
+    % SENSOR_TPRB.TET = atan2(BZ, BR); % Theta センサーの角度
     
     if CONFIG.DataType == 'exp'
         BZ = BZ + Bz_EF_at_sensor_b;
@@ -37,9 +37,43 @@ function [PARAM, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, POS] = make_sensor(PARA
                 SENSOR_TPRB.TET(i) = pi / 2;
             end
         end
+    elseif 1
+for i = 1:SENSOR_TPRB.NUM
+    if SENSOR_TPRB.R(i) <= 0.12
+        % 内側
+        SENSOR_TPRB.TET(i) = pi/2;
+        SENSOR_TPRB.TPRB(i) = BZ(i);
+    elseif (SENSOR_TPRB.Z(i) > -0.95 & SENSOR_TPRB.Z(i) < 0.95)
+        % 外側
+        SENSOR_TPRB.TET(i) = pi/2;
+        SENSOR_TPRB.TPRB(i) = BZ(i);
+    elseif SENSOR_TPRB.Z(i) > 0
+        % 天井
+        SENSOR_TPRB.TET(i) = pi/2;
+        SENSOR_TPRB.TPRB(i) = BR(i);
+    elseif SENSOR_TPRB.Z(i) <= 0
+        % 床
+        SENSOR_TPRB.TET(i) = pi/2;
+        SENSOR_TPRB.TPRB(i) = BR(i);
+    else
+        SENSOR_TPRB.R(i)
     end
+end
+    end
+
+    % figure()
+    % % plot(SENSOR_TPRB.TPRB)
+    % hold on
+    % plot(BZ, '-o')
+    % plot(BR, '-o')
+    % legend('BZ', 'BR')
+    % figure()
+    % plot(SENSOR_TPRB.TET, '-o')
+
+    % SENSOR_TPRB.TET(1:SENSOR_TPRB.NUM) = ones(1, SENSOR_TPRB.NUM) .* pi/2; 
     
-    SENSOR_TPRB.TPRB = sqrt(BR.^2 + BZ.^2);
+    % SENSOR_TPRB.TPRB = sqrt(BR.^2 + BZ.^2);
+    SENSOR_TPRB.TPRB = BZ;
     SENSOR_TPRB.ITYPE = 1; % 使っていない
 
     %% No NPRB
@@ -67,7 +101,7 @@ function [PARAM, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, POS] = make_sensor(PARA
     % CCSセンター位置の決定
     if CONFIG.AutoCCSZPos
         RR = SENSOR_TPRB.R; ZZ = SENSOR_TPRB.Z;
-        B = SENSOR_TPRB.TPRB;
+        B = abs(SENSOR_TPRB.TPRB);
         % RR = SENSOR_FLXLP.R; ZZ = SENSOR_FLXLP.Z;
         % B = SENSOR_FLXLP.FLXLP;
         RR0index = RR < min(RR) + 0.1;
@@ -91,7 +125,7 @@ function [PARAM, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, POS] = make_sensor(PARA
         end
 
         % x = sort(lo_max)
-            x = sort(lo_max, 'descend', 'ComparisonMethod', 'abs');
+        x = sort(lo_max, 'descend', 'ComparisonMethod', 'abs')
         lmax = islocalmax(B);
 
         if CONFIG.ShowFig

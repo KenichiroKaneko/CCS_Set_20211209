@@ -4,12 +4,19 @@ classdef opt_GA < handle
         N = 20;
         % 世代数
         itr = 4000;
+        % 許容誤差
+        EPS = 0.001;
     end
 
     properties
         pool = opt_GA.init(opt_GA.N);
         pool_next = opt_GA.init(opt_GA.N);
         err = 1;
+        min_err = 2^16;
+        goodgene = [];
+        gooditr = 1;
+        gene_memory = [];
+        err_memory = [];
     end
 
     methods (Static)
@@ -17,17 +24,20 @@ classdef opt_GA < handle
             for i = 1:N
                 % Matlabはゴミ
                 pool(i) = opt_Chromosome();
-                x = zeros(1,pool(1).BZ_gene_num);
-                y = zeros(1,pool(1).FL_gene_num);
-                ind_x = [1  2  4  5  7 11 13 16 19 22 25 27 31 41 42 45 46 50 52];
-                ind_y = [3  4  6 11 17 20 27 30 31 33 36 37 42 44 45 46 47 48 52];  
-                x(ind_x) = 1;
-                y(ind_y) = 1;
-                % x = pool(i).gene(1:pool(i).BZ_gene_num);
-                % y = pool(i).gene(pool(i).BZ_gene_num+1:end);
-                % x = x(randperm(length(x)));
-                % y = y(randperm(length(y)));
-                pool(1).gene = [x y];
+
+                % x = zeros(1,pool(1).BZ_gene_num);
+                % y = zeros(1,pool(1).FL_gene_num);
+                % ind_x = [1  2  4  5  7 11 13 16 19 22 25 27 31 41 42 45 46 50 52];
+                % ind_y = [3  4  6 11 17 20 27 30 31 33 36 37 42 44 45 46 47 48 52];  
+                % x(ind_x) = 1;
+                % y(ind_y) = 1;
+
+                x = pool(i).gene(1:pool(i).BZ_gene_num);
+                y = pool(i).gene(pool(i).BZ_gene_num+1:end);
+                x = x(randperm(length(x)));
+                y = y(randperm(length(y)));
+                pool(i).gene = [x y];
+                obj.gene_memory(i,:) = pool(i).gene;
             end
         end
     end
@@ -44,8 +54,16 @@ classdef opt_GA < handle
                 obj.saveStatus(i);
                 obj.mutateAll();
                 if i > 10
-                    if sum(obj.err(end-1:end)) < 0.00001
+                    if sum(obj.err(end-1:end)) < obj.EPS
+                        disp(['GA finished at itr:' num2str(i)]);
                         break
+                    end
+                end
+                for j = 1:obj.N
+                    if obj.pool(j).err < obj.min_err
+                        obj.min_err = obj.pool(j).err;
+                        obj.goodgene = obj.pool(j).gene;
+                        obj.gooditr = i;
                     end
                 end
             end
@@ -132,14 +150,14 @@ classdef opt_GA < handle
         function obj = getVal(obj)
             for i = 1:obj.N
                 temp = copy(obj.pool(i));
-                obj.pool(i).err = opt_getErr(obj, temp);
+                [obj, obj.pool(i).err] = opt_getErr(obj, temp);
             end
         end
 
-        function err = opt_getErr2(obj, temp)
+        function [obj, err] = opt_getErr2(obj, temp)
             BZ_i = find(temp.gene(1 : temp.BZ_gene_num) == 1);
             FL_i = find(temp.gene(temp.BZ_gene_num+1 : end) == 1);
-            err1 = (abs(30 - sum([BZ_i FL_i])));
+            err1 = (abs(333 - sum([BZ_i FL_i])));
             if length([BZ_i FL_i]) < 10
                 err2 = 100;
             else

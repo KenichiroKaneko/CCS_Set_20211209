@@ -15,11 +15,9 @@ function CCS_UTST()
             t = round((str2double(PARAM.time_CCS)) / 0.5);
             FL = FL(:, t)'; BZ = BZ(:, t)'; BR = zeros(1, length(BZ));
             ExtCOIL.I(3:10) = ExtCOIL.I_sig(1:8, t);
-
             % % 2Dプローブからreferenceのデータを作成
             % REF = load_2D_probe(PARAM);
             % hahaha;
-
         elseif CONFIG.DataType == 'sol'
             [FL, BZ, BR, ExtCOIL, REF, JEDDY, POS] = load_num_sol(PARAM, CONFIG); % OK
             t = 0; Ip = 0;

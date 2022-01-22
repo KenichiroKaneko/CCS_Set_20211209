@@ -6,7 +6,7 @@ function [PARAM, CONFIG] = define_params(type)
     CONFIG.DataType = type;
     CONFIG.Reload = 1;
     CONFIG.DevideFlux = 0;
-    CONFIG.AutoCCSZPos = 1;
+    CONFIG.AutoCCSZPos = 0;
     CONFIG.AutoCCSRPos = 0;
     CONFIG.ShowFig = 1;
     CONFIG.CalibTF = 1;
@@ -17,17 +17,24 @@ function [PARAM, CONFIG] = define_params(type)
     PARAMNUM = 1;
     % PARAM.utst_file_directory = '/Volumes';
     PARAM.utst_file_directory = './input';
-    PARAM.input_file_directory = './input2';
+    PARAM.input_file_directory = './input3';
     PARAM.temporary_file_directory = './temp';
     PARAM.output_file_directory = './output';
-    PARAM.num_sol_name = '/UTST_numel_2033';
-    % PARAM.num_sol_name = '/UTST_numel_1000Ip50';
-    % PARAM.num_sol_name = '/UTST_numel_1000Ip55';
-    % PARAM.num_sol_name = '/UTST_numel_1200Ip50';
-    % PARAM.num_sol_name = '/UTST_numel_0840';
-    PARAM.num_sol_name = '/UTST_numel_0800Ip50';
-    PARAM.MP_pos = "/CCS_sensor_position_opt.txt";
-    PARAM.FL_pos = "/CCS_sensor_position_opt.txt";
+    PARAM.num_sol_name = '/UTST_numel_2033'; PARAM.CCS = 1; z = 0;
+    % PARAM.num_sol_name = '/UTST_numel_0600Ip50'; PARAM.CCS = 2; % dame
+    % PARAM.num_sol_name = '/UTST_numel_0640Ip50'; PARAM.CCS = 2; % dame
+    PARAM.num_sol_name = '/UTST_numel_0720Ip50'; PARAM.CCS = 2; z = 0.48; p = [0.2, 0.045, 3];
+    PARAM.num_sol_name = '/UTST_numel_0760Ip50'; PARAM.CCS = 2; z = 0.44; p = [0.22, 0.045, 3];
+    % PARAM.num_sol_name = '/UTST_numel_0800Ip50'; PARAM.CCS = 2; z = 0.42; p = [0.22, 0.06, 3];
+    % PARAM.num_sol_name = '/UTST_numel_0840Ip50'; PARAM.CCS = 2; z = 0.39; p = [0.22, 0.058, 3];
+    % PARAM.num_sol_name = '/UTST_numel_0880Ip50'; PARAM.CCS = 2; z = 0.355; p = [0.22, 0.055, 3];
+    % PARAM.num_sol_name = '/UTST_numel_0920Ip50'; PARAM.CCS = 2; z = 0.32; p = [0.22, 0.057, 3];
+    % PARAM.num_sol_name = '/UTST_numel_1000Ip50'; PARAM.CCS = 2; z = 0.253; p = [0.25, 0.06, 3];
+    % PARAM.num_sol_name = '/UTST_numel_1200Ip50'; % dame
+    % PARAM.MP_pos = "/CCS_sensor_position_opt.txt";
+    % PARAM.FL_pos = "/CCS_sensor_position_opt.txt";
+    PARAM.MP_pos = "/CCS_MP_sensor_position_i.txt";
+    PARAM.FL_pos = "/CCS_FLXLP_sensor_position_i.txt";
 
     % shot param
     PARAM.shotnum = '010';
@@ -57,15 +64,18 @@ function [PARAM, CONFIG] = define_params(type)
     PARAM.NONC = 1;
     PARAM.SIGM = 0.00;
     PARAM.SEED = 3;
-    PARAM.CCS = 1;
-    PARAM.CCS = 2;
+    % PARAM.CCS = 1;
+    % PARAM.CCS = 2;
 
     if PARAM.CCS == 0
         PARAM.NE = 0;
     end
 
-    z = 0.13;
+    
+    % z1 z2         rr rr capper
+    % z = 0.48; p = [0.2, 0.045, 3];
     z = [-1, 1] * z;
+
 
     if PARAM.CCS == 1
         PARAM.IDECCS = 1; % D型のCCS
@@ -82,10 +92,14 @@ function [PARAM, CONFIG] = define_params(type)
     else
         PARAM.IDECCS = 1; % 丸いCCS
         for i = 1:PARAM.CCS
-            PARAM.R0(i) = 0.22;
             PARAM.Z0(i) = z(i);
-            PARAM.RR(i) = 0.06; % R方向の半径
-            PARAM.CAPPER(i) = 3; % 楕円率
+            PARAM.R0(i) = p(1);
+            PARAM.RR(i) = p(2); % R方向の半径
+            PARAM.CAPPER(i) = p(3); % 楕円率
+            % PARAM.Z0(i) = z(i);
+            % PARAM.R0(i) = 0.22;
+            % PARAM.RR(i) = 0.045; % R方向の半径
+            % PARAM.CAPPER(i) = 3; % 楕円率
             % PARAM.R0(i) = 0.25;
             % PARAM.Z0(i) = z(i);
             % PARAM.RR(i) = 0.06; % R方向の半径

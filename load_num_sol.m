@@ -104,6 +104,6 @@ function [param, psi] = cal_psi(param, psi)
         psi = psi + 2 * pi * Mu * param.coil_Ic(1, k) ./ (pi * (kk).^0.5) .* sqrt(param.coil_r(1, k) .* mtrxr) .* ...
             ((1 - kk / 2) .* K - E);
     end
-    save("cal_psi","psi")
+    % save("cal_psi","psi")
 
 end

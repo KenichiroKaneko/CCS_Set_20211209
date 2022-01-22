@@ -42,6 +42,8 @@ end
 [M I] = min(errs);
 Gene = GA.pool(I).gene;
 
+Gene = GA.goodgene;
+
 BZ_i = find(Gene(1 : GA.pool(I).BZ_gene_num) == 1);
 BZ_t = sprintf(repmat('% 3d', [1, length(BZ_i)]), BZ_i);
 FL_i = find(Gene(GA.pool(I).BZ_gene_num+1 : end) == 1);
@@ -49,9 +51,9 @@ FL_t = sprintf(repmat('% 3d', [1, length(FL_i)]), FL_i);
 err_t = sprintf('   %.5e', GA.pool(I).err);
 disp([err_t BZ_t FL_t]);
 
-state = '1月18日の深夜にスタートした50個の遺伝子を4000代までやったやつ';
+state = '1月21日の早朝に初めて20個の遺伝子を4000代までやったやつ';
 
-% save('vars_GA_0118')
+save('vars_GA_0122')
 % error('error description', A1)
 
 

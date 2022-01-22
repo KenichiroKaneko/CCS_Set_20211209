@@ -12,32 +12,40 @@ param.Sw_init = 1;
 % ファイル名や定数の定義
 % filenames = ["z201_r101Ip70"];
 % filenames = ["z1100_r602", "z1200_r602", "z1300_r602"];
-filenames = ["z1000_r602Ip50", "z1200_r602Ip50"];
-filenames = ["0600Ip55"];
+% filenames = ["z1000_r602Ip50", "z1200_r602Ip50"];
+% filenames = ["0600Ip50","0640Ip50","0680Ip50","0720Ip50","0760Ip50","0840Ip50",...
+%              "0880Ip50","0960Ip50"];
+% Nz_list = [600, 640, 680, 720, 760, 840, 880, 960];
+% zmax_list = [-0.4088, -0.3695, -0.3302, -0.2909, -0.2516, -0.1730, -0.1337, -0.0550];
+% z34_list = [0, 0, 0, 0, 0, 0, 0, 0];
+
+filenames = ["0920Ip50"];
+Nz_list = [920];
+zmax_list = [-0.0943];
+z34_list = [0];
 
 for fileNum = 1:length(filenames)
 
     % ファイルから値の読み込み
     param.Name = filenames(fileNum);
-    param.Nz = 600;
+    param.Nz = 2033;
     param.Nr = 602;
-    param.Nz = 401;
-    param.Nr = 201;
+    % param.Nz = 401;
+    param.Nz = Nz_list(fileNum);
+    % param.Nr = 201;
     param.Nz_orig = param.Nz;
     param.Nr_orig = param.Nr;
     param.zmin = -0.9985;
-    param.zmax = 0.9985;
-    % param.zmax = -0.4088; % 0600
-    % param.zmax = -0.2123; % 0800
+    param.zmax = 0.9985; % 2033
     % param.zmax = -0.0157; % 1000
+    % param.zmax = -0.0943; % 0900
+    % param.zmax = -0.2123; % 0800
+    % param.zmax = -0.4088; % 0600
+    % param.zmax = zmax_list(fileNum); % 1000
     param.rmin = 0.10815;
     param.rmax = 0.694;
     param.z1 = -0.285;
     param.z2 = -0.285;
-    % param.z3 = 0.1808; % 0800
-    % param.z4 = 0.1808;
-    % param.z3 = -0.0157; % 1000
-    % param.z4 = -0.0157;
     % param.z3 = 0;
     % param.z4 = 0;
     param.z3 = 0.285;
@@ -47,12 +55,14 @@ for fileNum = 1:length(filenames)
     param.zlimiter = 0;
     param.rlimiter = 0;
     param.rlimiter = 0.1656627;
-    
+
+    param.err = [];
+
     % GSplot用
     env3c.Nz = 2033;
     env3c.Nr = 602;
-    env3c.Nz = 201;
-    env3c.Nr = 101;
+    % env3c.Nz = 201;
+    % env3c.Nr = 101;
     env3c.zmin = -0.9985;
     env3c.zmax = 0.9985;
     env3c.rmin = 0.10815;
@@ -71,8 +81,8 @@ for fileNum = 1:length(filenames)
     % ファイルから値の読み込み
     param.alpha = 1.01;
     param.beta = 1.30;
-    param.P0 = 300; % 0~500~
-    param.Iplasma = -90e3; % 大きさ
+    param.P0 = 500; % 0~500~
+    param.Iplasma = -50e3; % 大きさ
     param.Itfc = 400e3; % あまり変わらない
     param.errormax = 1e-8;
     param.itermax = 1000;
@@ -109,12 +119,14 @@ for fileNum = 1:length(filenames)
         format long
         [error, psi] = cal_flux_C(param, psi, mu_jt);
 
+
         if (rem(i, 100) == 0)
             disp([num2str(i) ':' num2str(error)])
         end
 
         if error < param.errormax
             param.routine_num = param.routine_num + i;
+            param.err(param.routine_num) = error;
             disp(['Convergence! Iteration number is ' num2str(param.routine_num)]);
             break
         end
@@ -142,11 +154,14 @@ for fileNum = 1:length(filenames)
     contour(rr, zz, psi * 1000, v, 'r')
     param.r_limiterpos;
     param.z_limiterpos;
-    plot(r(param.r_limiterpos+1), z(param.z_limiterpos+1), 'o')
+    plot(r(param.r_limiterpos+1), z(param.z_limiterpos+1), 'o');
     axis equal
 
-    save('vars_gs_temp')
-    % gs2ccs(param, env3c, vars)
+    figure()
+    plot(param.err)
+
+    save('vars_gs_temp');
+    % gs2ccs(param, env3c, vars);
 
 end
 
@@ -518,6 +533,7 @@ function [param, psi, mu_jt, p, Ip] = sub_routine(param, divz, divr, psi, mu_jt,
 
         if error < param.errormax
             param.routine_num = param.routine_num + i;
+            param.err(param.routine_num) = error;
             disp(['  Sub routine finished at ' num2str(param.routine_num)]);
             break
         end
@@ -547,7 +563,7 @@ function gs2ccs(env, env3c, vars)
     dispFigure = 0;
     realFlag = 0;
     % 保存するdir
-    save_dir = "input2/UTST_numel_" + env.Name;
+    save_dir = "input3/UTST_numel_" + env.Name;
     if not(exist(save_dir, 'dir'))
         mkdir(save_dir);
     end
