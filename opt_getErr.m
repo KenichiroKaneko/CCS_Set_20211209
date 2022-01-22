@@ -17,12 +17,12 @@ function [obj, err] = opt_getErr(obj, temp)
     % refs = ["vars_verybig2033", "vars_verybig1000", "vars_verybig0800"];
     refs = ["vars_verybig2033", "UTST_numel_0720Ip50","UTST_numel_0760Ip50","UTST_numel_0800Ip50","UTST_numel_0840Ip50","UTST_numel_0880Ip50",...
             "UTST_numel_0920Ip50","UTST_numel_1000Ip50"];
-    refs = ["UTST_numel_2033", "UTST_numel_0720Ip50","UTST_numel_0760Ip50","UTST_numel_0800Ip50","UTST_numel_0840Ip50","UTST_numel_0880Ip50",...
-            "UTST_numel_0920Ip50","UTST_numel_1000Ip50"];
+    % refs = ["UTST_numel_2033", "UTST_numel_0720Ip50","UTST_numel_0760Ip50","UTST_numel_0800Ip50","UTST_numel_0840Ip50","UTST_numel_0880Ip50",...
+    %         "UTST_numel_0920Ip50","UTST_numel_1000Ip50"];
 
     for i = 1:length(refs)
 
-        load(['./vars_opt2/'+ refs(i)], 'PARAM', 'CONFIG', 'FFout', 'SENSOR_TPRB', 'SENSOR_NPRB', 'SENSOR_FLXLP', 'CCSDAT', 'ExtCOIL', 'WALL');
+        load(['./vars_opt/'+ refs(i)], 'PARAM', 'CONFIG', 'FFout', 'SENSOR_TPRB', 'SENSOR_NPRB', 'SENSOR_FLXLP', 'CCSDAT', 'ExtCOIL', 'WALL');
         CONFIG.ShowFig = 0;
         % SENSORを作り直す
         SENSOR_TPRB.R = SENSOR_TPRB.R(ind_BZ);
@@ -53,12 +53,12 @@ function [obj, err] = opt_getErr(obj, temp)
     
     err = max(errs);
 
-    % メモリーが20個以下、errがほどほどに良かったら記憶する
-    if size(obj.gene_memory, 1) < obj.N
+    % メモリーがobj.N*3個以下、errがほどほどに良かったら記憶する
+    if size(obj.gene_memory, 1) < obj.N*3
         i = size(obj.gene_memory, 1) + 1;
         obj.gene_memory(i,:) = temp.gene;
         obj.err_memory(i) = err;
-    elseif size(obj.gene_memory, 1) == obj.N
+    elseif size(obj.gene_memory, 1) == obj.N*3
         max_err_me = obj.err_memory(1);
         for i = 2:size(obj.gene_memory, 1)
             if obj.err_memory(i) > max_err_me
