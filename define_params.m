@@ -6,7 +6,7 @@ function [PARAM, CONFIG] = define_params(type)
     CONFIG.DataType = type;
     CONFIG.Reload = 1;
     CONFIG.DevideFlux = 0;
-    CONFIG.AutoCCSZPos = 0;
+    CONFIG.AutoCCSZPos = 1;
     CONFIG.AutoCCSRPos = 0;
     CONFIG.ShowFig = 1;
     CONFIG.CalibTF = 1;
@@ -23,8 +23,8 @@ function [PARAM, CONFIG] = define_params(type)
     PARAM.num_sol_name = '/UTST_numel_2033'; PARAM.CCS = 1; z = 0;
     % PARAM.num_sol_name = '/UTST_numel_0600Ip50'; PARAM.CCS = 2; % dame
     % PARAM.num_sol_name = '/UTST_numel_0640Ip50'; PARAM.CCS = 2; % dame
-    PARAM.num_sol_name = '/UTST_numel_0720Ip50'; PARAM.CCS = 2; z = 0.48; p = [0.2, 0.045, 3];
-    PARAM.num_sol_name = '/UTST_numel_0760Ip50'; PARAM.CCS = 2; z = 0.44; p = [0.22, 0.045, 3];
+    % PARAM.num_sol_name = '/UTST_numel_0720Ip50'; PARAM.CCS = 2; z = 0.48; p = [0.2, 0.045, 3];
+    % PARAM.num_sol_name = '/UTST_numel_0760Ip50'; PARAM.CCS = 2; z = 0.44; p = [0.22, 0.045, 3];
     % PARAM.num_sol_name = '/UTST_numel_0800Ip50'; PARAM.CCS = 2; z = 0.42; p = [0.22, 0.06, 3];
     % PARAM.num_sol_name = '/UTST_numel_0840Ip50'; PARAM.CCS = 2; z = 0.39; p = [0.22, 0.058, 3];
     % PARAM.num_sol_name = '/UTST_numel_0880Ip50'; PARAM.CCS = 2; z = 0.355; p = [0.22, 0.055, 3];

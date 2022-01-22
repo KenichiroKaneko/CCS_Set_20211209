@@ -1,38 +1,40 @@
 % 最適化のループの中
 classdef opt_Chromosome < handle & matlab.mixin.Copyable
     properties (Constant = true)
-        % センサーの数
+        % % センサーの数
+        % BZ_num = 40;
+        % FL_num = 40;
+        % % z=0の点を固定＆上下対照にするときの遺伝子が1の数
+        % BZ_1gene_num = 19;
+        % FL_1gene_num = 19;
+        % % センサー候補地の数
+        % BZ_points = 106;
+        % FL_points = 106;
+        % % 上半分のセンサー候補地の数（遺伝子が0か1の数）
+        % BZ_gene_num = 52;
+        % FL_gene_num = 52;
+
+        % % センサーの数
         BZ_num = 40;
         FL_num = 40;
-        % z=0の点を固定＆上下対照にするときの遺伝子が1の数
-        BZ_1gene_num = 18;
-        FL_1gene_num = 18;
-        % センサー候補地の数
-        BZ_points = 106;
-        FL_points = 106;
-        % 上半分のセンサー候補地の数（遺伝子が0か1の数）
-        BZ_gene_num = 52;
-        FL_gene_num = 52;
-        % % センサーの数
-        % BZ_num = 5;
-        % FL_num = 5;
         % % z=0の点を固定＆上下対照にするときの遺伝子が1の数
-        % BZ_1gene_num = 5;
-        % FL_1gene_num = 5;
+        BZ_1gene_num = 19;
+        FL_1gene_num = 19;
         % % センサー候補地の数
-        % BZ_points = 10;
-        % FL_points = 10;
+        BZ_points = 88;
+        FL_points = 106;
         % % 上半分のセンサー候補地の数（遺伝子が0か1の数）
-        % BZ_gene_num = 10;
-        % FL_gene_num = 10;
+        BZ_gene_num = 43;
+        FL_gene_num = 52;
+
         %  遺伝子数
         L = opt_Chromosome.BZ_gene_num + opt_Chromosome.FL_gene_num;
         % 突然変異率
-        M_rate = 0.004;
+        M_rate = 0.005;
         % 交叉率
         C_rate = 0.05;
         % 特殊交叉率
-        X_rate = 0.05;
+        X_rate = 0.00;
     end
 
     properties (Constant = false)
@@ -53,12 +55,6 @@ classdef opt_Chromosome < handle & matlab.mixin.Copyable
                 zeros(1, opt_Chromosome.FL_gene_num - opt_Chromosome.FL_1gene_num)];
             x_rand = x(randperm(length(x)));
             y_rand = y(randperm(numel(y)));
-            x = zeros(1,opt_Chromosome.BZ_gene_num);
-            y = zeros(1,opt_Chromosome.FL_gene_num);
-            ind_x = [2 3:3:51 52];
-            ind_y = [2 3:3:51 52];
-            x(ind_x) = 1;
-            y(ind_y) = 1;
             gene = [x, y];
         end
     end
@@ -81,9 +77,9 @@ classdef opt_Chromosome < handle & matlab.mixin.Copyable
                 if x < 0
                     gene_type = 1;
                     obj = chromo_mdfy(obj, gene_type, abs(x), range, 'BZ');
-                elseif x > 0
+                elseif x >= 9
                     gene_type = 0;
-                    obj = chromo_mdfy(obj, gene_type, abs(x), range, 'BZ');
+                    obj = chromo_mdfy(obj, gene_type, 1, range, 'BZ');
                 end
             end
             range = obj.BZ_gene_num+1 : obj.L;
@@ -92,9 +88,9 @@ classdef opt_Chromosome < handle & matlab.mixin.Copyable
                 if x < 0
                     gene_type = 1;
                     obj = chromo_mdfy(obj, gene_type, abs(x), range, 'FL');
-                elseif x > 0
+                elseif x >= 9
                     gene_type = 0;
-                    obj = chromo_mdfy(obj, gene_type, abs(x), range, 'FL');
+                    obj = chromo_mdfy(obj, gene_type, 1, range, 'FL');
                 end
             end
         end
