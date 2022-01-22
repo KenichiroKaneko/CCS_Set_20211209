@@ -3,7 +3,7 @@ classdef opt_GA < handle
         % 個体数
         N = 20;
         % 世代数
-        itr = 4000;
+        itr = 2000;
         % 許容誤差
         EPS = 0.001;
     end
@@ -68,6 +68,13 @@ classdef opt_GA < handle
                 end
             end
         end
+        
+        function obj = getVal(obj)
+            for i = 1:obj.N
+                temp = copy(obj.pool(i));
+                [obj, obj.pool(i).err] = opt_getErr(obj, temp);
+            end
+        end
 
         function crossOverAll(obj)
             % 交叉
@@ -123,7 +130,7 @@ classdef opt_GA < handle
             % トーナメント選択
             i = 1;
             while i <= obj.N
-                box = 2;
+                box = 4;
                 win = 1;
                 rands = [];
                 offspring_errs = [];
@@ -147,21 +154,14 @@ classdef opt_GA < handle
             obj.pool = obj.pool_next;
         end
 
-        function obj = getVal(obj)
-            for i = 1:obj.N
-                temp = copy(obj.pool(i));
-                [obj, obj.pool(i).err] = opt_getErr(obj, temp);
-            end
-        end
-
         function [obj, err] = opt_getErr2(obj, temp)
             BZ_i = find(temp.gene(1 : temp.BZ_gene_num) == 1);
             FL_i = find(temp.gene(temp.BZ_gene_num+1 : end) == 1);
-            err1 = (abs(333 - sum([BZ_i FL_i])));
+            err1 = (abs(379 - sum([BZ_i FL_i])));
             if length([BZ_i FL_i]) < 10
                 err2 = 100;
             else
-                err2 = length([BZ_i FL_i]) - 10;
+                err2 = length([BZ_i FL_i]) - 38;
             end
             err = err1 + err2;
         end
