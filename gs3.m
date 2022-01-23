@@ -1,3 +1,5 @@
+% 経過時間は 1087.517224 秒です。解像度上げていく方式
+
 % 数値解の作成と、CCS用の入力ファイルの作成
 
 close all; clear all;
@@ -28,11 +30,11 @@ for fileNum = 1:length(filenames)
 
     % ファイルから値の読み込み
     param.Name = filenames(fileNum);
+    % param.Nz = Nz_list(fileNum);
     param.Nz = 2033;
     param.Nr = 602;
-    param.Nz = Nz_list(fileNum);
-    param.Nz = 401;
-    param.Nr = 201;
+    % param.Nz = 401;
+    % param.Nr = 201;
     param.Nz_orig = param.Nz;
     param.Nr_orig = param.Nr;
     param.zmin = -0.9985;
@@ -93,25 +95,26 @@ for fileNum = 1:length(filenames)
 
     %% DEFINE OMEGA
     param.omega = 1.945;
+    tic
 
-    %% 荒いメッシュで計算
-    [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 4, 4);
-    [param, psi, mu_jt, p, Ip] = sub_routine(param, 4, 4, psi, mu_jt, p, Ip);
-    % [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 2, 2);
-    [param, psi, mu_jt, p, Ip] = sub_routine(param, 2, 2, psi, mu_jt, p, Ip);
-    % [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 1.5, 1.5);
-    [param, psi, mu_jt, p, Ip] = sub_routine(param, 1.5, 1.5, psi, mu_jt, p, Ip);
-    % %% メインのルーチン用に変形
-    param.Nz = param.Nz_orig;
-    param.Nr = param.Nr_orig;
-    psi = imresize(psi, [param.Nz, param.Nr]);
-    % psi = zeros(param.Nz, param.Nr);
-    mu_jt = zeros(param.Nz, param.Nr);
-    p = zeros(param.Nz, param.Nr);
-    Ip = zeros(param.Nz, param.Nr);
-    param = define_params(param, param.Nz, param.Nr);
-    % [param, psi] = cal_initial_flux(param, psi);
-    psi = psi_round_revive(psi, param);
+    % %% 荒いメッシュで計算
+    % [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 4, 4);
+    % [param, psi, mu_jt, p, Ip] = sub_routine(param, 4, 4, psi, mu_jt, p, Ip);
+    % % [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 2, 2);
+    % [param, psi, mu_jt, p, Ip] = sub_routine(param, 2, 2, psi, mu_jt, p, Ip);
+    % % [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 1.5, 1.5);
+    % [param, psi, mu_jt, p, Ip] = sub_routine(param, 1.5, 1.5, psi, mu_jt, p, Ip);
+    % % %% メインのルーチン用に変形
+    % param.Nz = param.Nz_orig;
+    % param.Nr = param.Nr_orig;
+    % psi = imresize(psi, [param.Nz, param.Nr]);
+    [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 1, 1); % x1
+    % psi = zeros(param.Nz, param.Nr); % x1
+    % mu_jt = zeros(param.Nz, param.Nr);
+    % p = zeros(param.Nz, param.Nr);
+    % Ip = zeros(param.Nz, param.Nr);
+    % psi = psi_round_revive(psi, param);
+    'test'
 
     %% メインのルーチン
     for i = 1:1000000
@@ -133,6 +136,7 @@ for fileNum = 1:length(filenames)
         end
 
     end
+    toc
 
     psi0 = zeros(param.Nz, param.Nr);
     [param, psi0] = cal_psi(param, psi0);

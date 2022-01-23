@@ -1,31 +1,31 @@
 % 最適化のループの中
 classdef opt_Chromosome < handle & matlab.mixin.Copyable
     properties (Constant = true)
-        % % センサーの数
-        % BZ_num = 40;
-        % FL_num = 40;
-        % % z=0の点を固定＆上下対照にするときの遺伝子が1の数
-        % BZ_1gene_num = 19;
-        % FL_1gene_num = 19;
-        % % センサー候補地の数
-        % BZ_points = 106;
-        % FL_points = 106;
-        % % 上半分のセンサー候補地の数（遺伝子が0か1の数）
-        % BZ_gene_num = 52;
-        % FL_gene_num = 52;
-
-        % % センサーの数
+        % センサーの数
         BZ_num = 40;
         FL_num = 40;
-        % % z=0の点を固定＆上下対照にするときの遺伝子が1の数
+        % z=0の点を固定＆上下対照にするときの遺伝子が1の数
         BZ_1gene_num = 19;
         FL_1gene_num = 19;
-        % % センサー候補地の数
-        BZ_points = 88;
+        % センサー候補地の数
+        BZ_points = 106;
         FL_points = 106;
-        % % 上半分のセンサー候補地の数（遺伝子が0か1の数）
-        BZ_gene_num = 43;
+        % 上半分のセンサー候補地の数（遺伝子が0か1の数）
+        BZ_gene_num = 52;
         FL_gene_num = 52;
+
+        % % % センサーの数
+        % BZ_num = 40;
+        % FL_num = 40;
+        % % % z=0の点を固定＆上下対照にするときの遺伝子が1の数
+        % BZ_1gene_num = 19;
+        % FL_1gene_num = 19;
+        % % % センサー候補地の数
+        % BZ_points = 88;
+        % FL_points = 106;
+        % % % 上半分のセンサー候補地の数（遺伝子が0か1の数）
+        % BZ_gene_num = 43;
+        % FL_gene_num = 52;
 
         %  遺伝子数
         L = opt_Chromosome.BZ_gene_num + opt_Chromosome.FL_gene_num;
