@@ -5,13 +5,15 @@ function [PARAM, CONFIG] = define_params(type)
 
     CONFIG.DataType = type;
     CONFIG.Reload = 1;
-    CONFIG.DevideFlux = 0;
-    CONFIG.AutoCCSZPos = 1;
+    CONFIG.DevideFlux = 1;
+    CONFIG.AutoCCSZPos = 0;
     CONFIG.AutoCCSRPos = 0;
     CONFIG.ShowFig = 1;
+    CONFIG.ShowFig2 = 0;
     CONFIG.CalibTF = 1;
-    CONFIG.CalibPF3 = 1;
+    CONFIG.CalibPF3 = 0;
     CONFIG.RevSenPos = 1;
+    CONFIG.Nmrz = 'norm';
 
     % file direcory
     PARAMNUM = 1;
@@ -31,21 +33,24 @@ function [PARAM, CONFIG] = define_params(type)
     % PARAM.num_sol_name = '/UTST_numel_0920Ip50'; PARAM.CCS = 2; z = 0.32; p = [0.22, 0.057, 3];
     % PARAM.num_sol_name = '/UTST_numel_1000Ip50'; PARAM.CCS = 2; z = 0.253; p = [0.25, 0.06, 3];
     % PARAM.num_sol_name = '/UTST_numel_1200Ip50'; % dame
-    % PARAM.MP_pos = "/CCS_sensor_position_opt.txt";
-    % PARAM.FL_pos = "/CCS_sensor_position_opt.txt";
-    PARAM.MP_pos = "/CCS_MP_sensor_position_i.txt";
-    PARAM.FL_pos = "/CCS_FLXLP_sensor_position_i.txt";
+    PARAM.MP_pos = "/CCS_sensor_position_opt.txt";
+    PARAM.FL_pos = "/CCS_sensor_position_opt.txt";
+    % PARAM.MP_pos = "/CCS_MP_sensor_position_i.txt";
+    % PARAM.FL_pos = "/CCS_FLXLP_sensor_position_i.txt";
 
     % shot param
-    PARAM.shotnum = '010';
+    % PARAM.shotnum = '010';
+    % PARAM.shotnum_TF = '002';
+    % PARAM.date = '211217';
+
+    PARAM.shotnum = '004';
     PARAM.shotnum_TF = '002';
     PARAM.date = '211217';
-    % PARAM.shotnum = '006';
-    % PARAM.shotnum_TF = '001';
-    % PARAM.date = '210906';
+
     PARAM.shotnum_PF3 = '003';
     PARAM.date_calib_PF3 = '211217';
-    PARAM.time_CCS = '9600';
+
+    PARAM.time_CCS = '9605';
 
     % 使わないセンサー
     PARAM.dead_BZ = [19, 20,27, 32, 39, 40];
@@ -56,7 +61,7 @@ function [PARAM, CONFIG] = define_params(type)
     % 打切り項数（０でLcurve法）
     PARAM.KUP = 44;
     PARAM.KUP = 85;
-    PARAM.KUP = 70;
+    PARAM.KUP = 75;
 
     % CCS parameters
     PARAM.IUTST = 5;
@@ -71,19 +76,17 @@ function [PARAM, CONFIG] = define_params(type)
         PARAM.NE = 0;
     end
 
-    
     % z1 z2         rr rr capper
     % z = 0.48; p = [0.2, 0.045, 3];
     z = [-1, 1] * z;
 
-
     if PARAM.CCS == 1
         PARAM.IDECCS = 1; % D型のCCS
         i = 1;
-        PARAM.R0(i) = 0.3;
+        PARAM.R0(i) = 0.34;
         PARAM.Z0(i) = 0;
-        PARAM.RR(i) = 0.06;
-        PARAM.CAPPER(i) = 1.8;
+        PARAM.RR(i) = 0.05;
+        PARAM.CAPPER(i) = 1.6;
         PARAM.NE(i) = 3;
         PARAM.MSEC(i, 1) = 1;
         PARAM.MSEC(i, 2) = 1;

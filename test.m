@@ -1,60 +1,79 @@
 % 新たなLCFSの評価
 clear all;
 close all;
-load('vars_exp')
+load('vars_result_KUP75')
 
-figure()
-hold on
-% 磁気軸
-[m r0] = min(min(REF.Flux));
-[m z0] = min(REF.Flux(:, r0));
-r0 = REF.R(r0);
-z0 = REF.Z(z0);
-plot(r0, z0, 'o')
-contour(CCR, CCZ, psi)
-contour(REF.R, REF.Z ,REF.Flux)
+CONFIG.ShowFig = 1;
+err_LCFS = evaluate_LCFS(psi, REF, PARAM, CONFIG, CCR, CCZ,0)
 
-l = 0.6; % 直線の長さ
-s = 100; % 直線の内部を補完する数
-ignore = round(s * 0.3) % 内側から無視する数(中心付近は磁束が乱れる)
-n = 32; % 放射状にいくつの線を引くか
+% % return
+% CONFIG.ShowFig = 1;
+% MSE = EVALUATE(psi, REF, PARAM, CONFIG, CCSDAT, CCR, CCZ)
+% % err_LCFS = evaluate_LCFS(psi, REF, PARAM, CONFIG, CCR, CCZ, 0)
+% error('error description', A1)
+% l = 0.6;
+% s = 1000;
+% ignore = round(s * 0.1);
+% n = 32;
+% zhalf = round(length(REF.Z) / 2);
+% figure()
+% hold on
+% for c = 1:2
+%     if c == 1
+%         range = 1:zhalf;
+%         zplus = 0;
+%     else
+%         range = zhalf+1:length(REF.Z);
+%         zplus = zhalf;
+%     end
+%     % 磁気軸
+%     [m r0] = min(min(REF.Flux(range, :)));
+%     [m z0] = min(REF.Flux(range, r0));
+%     R0(c) = REF.R(r0);
+%     Z0(c) = REF.Z(z0 + zplus);
+%     plot(R0(c), Z0(c), 'o')
+%     for i = 1:n
+%         theta = 2 * pi / n * (i - 1) + pi / n;
+%         r = l * sin(theta); z = l * cos(theta);
+%         line_r = [R0(c), R0(c) + r]; line_z = [Z0(c), Z0(c) + z];
+%         % ある直線が作るpsiの断面を取得 
+%         [cx_ref, cy_ref, c_ref] = improfile(REF.R, REF.Z(range), REF.Flux(range, :), line_r, line_z, s, 'bilinear');
+%         c_ref(1:ignore) = -0.001;
+%         % LCFS(psi=0)との交点を探索
+%         [m, J] = min(abs(c_ref));
+%         I_ref(c, i) = J;
+%         plot3(cx_ref, cy_ref, c_ref);
+%         plot(cx_ref(I_ref(c, i)), cy_ref(I_ref(c, i)), 'o')
+%         contour(REF.R, REF.Z, REF.Flux,'LineColor', 'm', 'LineWidth', 2);
+%     end
+% end
 
-% ReferenceのLCFSの評価
-for i = 1:n
-    theta = 2 * pi / n * (i - 1) + pi / n;
-    r = l * sin(theta);
-    z = l * cos(theta);
-    line_r = [r0, r0 + r];
-    line_z = [z0, z0 + z];
-    % ある直線が作るpsiの断面を取得
-    [cx_ref, cy_ref, c_ref] = improfile(REF.R, REF.Z, REF.Flux, line_r, line_z, s, 'bilinear');
-    c_ref(1:ignore) = [];
-    % LCFS(psi=0)との交点を探索
-    [m, J] = min(abs(c_ref));
-    I_ref(i) = J + ignore;
-    plot3(cx_ref, cy_ref, c_ref);
-    plot(cx_ref(I_ref(i)), cy_ref(I_ref(i)), 'o')
-    plot(cx_ref(ignore), cy_ref(ignore), 'o')
-    
-end
+% I_ref = reshape(I_ref, [1, 2*n]);
 
-for i = 1:n
-    theta = 2 * pi / n * (i - 1) + pi / n;
-    r = l * sin(theta);
-    z = l * cos(theta);
-    line_r = [r0, r0 + r];
-    line_z = [z0, z0 + z];
-    % ある直線が作るpsiの断面を取得
-    [cx,cy,c] = improfile(CCR, CCZ, psi, line_r, line_z, s, 'bilinear');
-    c(1:ignore) = [];
-    % LCFS(psi=0)との交点を探索
-    [m, J] = min(abs(c));
-    I(i) = J + ignore;
-    plot3(cx,cy,c);
-    plot(cx(I(i)), cy(I(i)), 'o')
-    plot(cx(ignore), cy(ignore), 'o')
-end
+% zhalf = round(size(psi, 1) / 2)
+% for c = 1:2
+%     if c == 1
+%         range = 1:zhalf;
+%     else
+%         range = zhalf+1:size(psi, 1);
+%     end
 
-% matlabは1 origin なのでインデックスを-1する
-% 正しい距離を計算するのも、インデックスで計算するのも結果は同じ
-1 / n * sum(abs(I_ref - I) ./ (I_ref-1)) * 100
+%     for i = 1:n
+%         theta = 2 * pi / n * (i - 1) + pi / n;
+%         r = l * sin(theta); z = l * cos(theta);
+%         line_r = [R0(c), R0(c) + r]; line_z = [Z0(c), Z0(c) + z];
+%         % ある直線が作るpsiの断面を取得
+%         [cx,cy,cc] = improfile(CCR, CCZ(range), psi(range, :), line_r, line_z, s, 'bilinear');
+%         cc(1:ignore) = 0.01;
+%         [m, J] = min(abs(cc));
+%         I(c, i) = J;
+%         if CONFIG.ShowFig
+%             plot([line_r], [line_z], 'r');
+%         end
+%         plot(cx(I(c, i)), cy(I(c, i)), 'o')
+%     end
+% end
+
+% v = linspace(-20, 20, 101);
+% contour(CCR, CCZ, psi*1000, v)
+% I= reshape(I, [1, 2*n]);

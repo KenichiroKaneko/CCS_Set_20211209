@@ -98,30 +98,28 @@ for fileNum = 1:length(filenames)
     tic
 
     % %% 荒いメッシュで計算
-    % [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 4, 4);
-    % [param, psi, mu_jt, p, Ip] = sub_routine(param, 4, 4, psi, mu_jt, p, Ip);
-    % % [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 2, 2);
-    % [param, psi, mu_jt, p, Ip] = sub_routine(param, 2, 2, psi, mu_jt, p, Ip);
-    % % [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 1.5, 1.5);
-    % [param, psi, mu_jt, p, Ip] = sub_routine(param, 1.5, 1.5, psi, mu_jt, p, Ip);
+    [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 4, 4);
+    [param, psi, mu_jt, p, Ip] = sub_routine(param, 4, 4, psi, mu_jt, p, Ip);
+    % [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 2, 2);
+    [param, psi, mu_jt, p, Ip] = sub_routine(param, 2, 2, psi, mu_jt, p, Ip);
+    % [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 1.5, 1.5);
+    [param, psi, mu_jt, p, Ip] = sub_routine(param, 1.5, 1.5, psi, mu_jt, p, Ip);
     % % %% メインのルーチン用に変形
-    % param.Nz = param.Nz_orig;
-    % param.Nr = param.Nr_orig;
-    % psi = imresize(psi, [param.Nz, param.Nr]);
+    param.Nz = param.Nz_orig;
+    param.Nr = param.Nr_orig;
+    psi = imresize(psi, [param.Nz, param.Nr]);
     [param, psi, mu_jt, p, Ip] = sub_routine_init(param, 1, 1); % x1
     % psi = zeros(param.Nz, param.Nr); % x1
-    % mu_jt = zeros(param.Nz, param.Nr);
-    % p = zeros(param.Nz, param.Nr);
-    % Ip = zeros(param.Nz, param.Nr);
-    % psi = psi_round_revive(psi, param);
-    'test'
+    mu_jt = zeros(param.Nz, param.Nr);
+    p = zeros(param.Nz, param.Nr);
+    Ip = zeros(param.Nz, param.Nr);
+    psi = psi_round_revive(psi, param);
 
     %% メインのルーチン
     for i = 1:1000000
         [psi_bar, mu_jt, p, Ip] = cal_jt(param, psi, mu_jt, p, Ip);
         format long
         [error, psi] = cal_flux_C(param, psi, mu_jt);
-
 
         if (rem(i, 100) == 0)
             disp([num2str(i) ':' num2str(error)])

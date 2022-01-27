@@ -42,7 +42,7 @@ function WALL = loadwalldata(PARAM, CONFIG)
     % MAXM = 11;
     %% Modified_MI 20211103 kokomade
 
-    if 1 %CONFIG.DataType == 'sol'
+    if 0 %CONFIG.DataType == 'sol'
         % 数値解は完全導体を仮定しているので外側の渦電流ノードを消さない
         % と思いきや凸部の渦電流を無視できそうなので全部else側に行かせてる
         % kaneko

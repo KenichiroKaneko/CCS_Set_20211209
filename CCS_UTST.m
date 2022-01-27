@@ -48,20 +48,19 @@ function CCS_UTST()
     % 順問題の解行列FF、CCS点と各センサー及び自分以外のCCS点との関係式行列AAを作成
     [FC, BR, BZ, PSIFLX, PSIC, AA, FF] = FORM(PARAM, CONFIG, FF, ...
         ExtCOIL, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, WALL);
-
     % 重み付け
-    [FF, FC, AA, factors] = weight(FF,FC,AA,SENSOR_NPRB,SENSOR_TPRB,SENSOR_FLXLP,CCSDAT);
-
+    [FF, FC, AA, factors] = weight(CONFIG, FF,FC,AA,SENSOR_NPRB,SENSOR_TPRB,SENSOR_FLXLP,CCSDAT);
     % 逆問題を解く
     FFout = tsvd(PARAM, CONFIG, AA, FF, FC, ...
         SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, WALL);
-
     % プロット用に渦電流を計算する
     DISF = EDDYP(FFout, PARAM, CONFIG, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, WALL);
-
     % 逆問題を解いて求めたプラズマ電流およびコイルに流れる電流から、磁気面を計算
     [psi, CCR, CCZ, DELGE, RCCS, ZCCS, FL2, BZ2, BR2] = INTER(PARAM, 0, FFout, ExtCOIL,...
     SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, WALL);
+
+    err_LCFS = evaluate_LCFS(psi, REF, PARAM, CONFIG, CCR, CCZ, 0)
+    save('vars_result_KUP75')
 
     % 結果を表示
     if CONFIG.ShowFig
@@ -69,11 +68,9 @@ function CCS_UTST()
             SENSOR_TPRB, SENSOR_FLXLP, WALL,...
             ExtCOIL, DISF, t, Ip, FFout)
     end
-
-    err_LCFS = evaluate_LCFS(psi, REF, PARAM, CCR, CCZ, 0)
+    
     error('error description', A1)
-    save('vars_sol_2033')
-    % 
+
     % 解からもう一度逆問題を解く
     FF = AA * FFout; FF = FF';
     PARAM.dead_FL = []; PARAM.dead_BZ = [];
@@ -81,22 +78,16 @@ function CCS_UTST()
     
     % 重み付け
     [FF, FC, AA, factors] = weight(FF,FC,AA,SENSOR_NPRB,SENSOR_TPRB,SENSOR_FLXLP,CCSDAT);
-
     % 逆問題を解く
     FFout = tsvd(PARAM, CONFIG, AA, FF, FC, ...
         SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, WALL);
-    
-    % プロット用に渦電流を計算する
-    DISF = EDDYP(FFout, PARAM, CONFIG, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, WALL);
-
     % 逆問題を解いて求めたプラズマ電流およびコイルに流れる電流から、磁気面を計算
     [psi, CCR, CCZ, DELGE, RCCS, ZCCS, FL2, BZ2, BR2] = INTER(PARAM, 0, FFout, ExtCOIL,...
     SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, WALL);
-
-    % 結果を表示
-    if CONFIG.ShowFig
-        show_results(PARAM, CONFIG, CCR, CCZ, CCSDAT, REF, psi,...
-            SENSOR_TPRB, SENSOR_FLXLP, WALL,...
-            ExtCOIL, DISF, t, Ip)
-    end
+    % % 結果を表示
+    % if CONFIG.ShowFig
+    %     show_results(PARAM, CONFIG, CCR, CCZ, CCSDAT, REF, psi,...
+    %         SENSOR_TPRB, SENSOR_FLXLP, WALL,...
+    %         ExtCOIL, DISF, t, Ip)
+    % end
 end

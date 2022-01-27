@@ -28,6 +28,8 @@ function FFout = tsvd(PARAM, CONFIG, A, FF, FC, ...
         KUP = PARAM.KUP;
     end
 
+    % KUP = max(KUP, 75);
+
     if CONFIG.ShowFig
         disp(['Lcurve : ', num2str(KUP_L) ', KUP : ', num2str(KUP)])
     end
@@ -43,5 +45,7 @@ function FFout = tsvd(PARAM, CONFIG, A, FF, FC, ...
     X = P_solved;
     FFout = X;
 
-    cal_MRE(PARAM, CONFIG, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, A, S, V, U, X, FC, FF)
+    if CONFIG.ShowFig2
+        cal_MRE(PARAM, CONFIG, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, A, S, V, U, X, FC, FF)
+    end
 end

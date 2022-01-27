@@ -5,26 +5,28 @@ function [FL, BZ, BR, ExtCOIL, REF, JEDDY, POS] = load_num_sol(PARAM, CONFIG)
     vars = load([PARAM.input_file_directory PARAM.num_sol_name '/merged.mat']);
     env = vars.env3c;
 
-    % % プラズマ無しの容器内の磁束
+    % プラズマ無しの容器内の磁束
     % psi602 = zeros(env.Nz, env.Nr_orig);
-    % [env, psi602] = cal_psi(env, psi602);
-    % psi602 = psi602.';
-    % % プラズマ無しの容器外も含めた磁束
-    % env.Nr = 800;
-    % env.rmax = env.rmin + env.delr * (env.Nr - 1);
-    % psi800 = zeros(env.Nz, env.Nr);
-    % [env, psi800] = cal_psi(env, psi800);
-    % psi800 = psi800.';
-    % % プラズマ有りの容器内の磁束
-    % psi_orig = vars.psi;
-    % % プラズマ有りの容器外も含めた磁束（外側に磁束を付け足し）
+    psi602 = zeros(2033, 602);
+    [env, psi602] = cal_psi(env, psi602);
+    psi602 = psi602.';
+    % プラズマ無しの容器外も含めた磁束
+    env.Nr = 800;
+    env.rmax = env.rmin + env.delr * (env.Nr - 1);
+    psi800 = zeros(env.Nz, env.Nr);
+    [env, psi800] = cal_psi(env, psi800);
+    psi800 = psi800.';
+    % プラズマ有りの容器内の磁束
+    psi_orig = vars.psi;
+    % プラズマ有りの容器外も含めた磁束（外側に磁束を付け足し）
     % padding = zeros(env.Nr - env.Nr_orig, env.Nz);
-    % psi602 = [psi602; padding];
-    % psi_orig = [psi_orig; padding];
-    % psi = psi_orig - psi602 + psi800; % 磁束の分布
+    padding = zeros(env.Nr - 602, env.Nz);
+    psi602 = [psi602; padding];
+    psi_orig = [psi_orig; padding];
+    psi = psi_orig - psi602 + psi800; % 磁束の分布
 
-    % 外側にセンサーをおかない
-    psi = vars.psi;
+    % % 外側にセンサーをおかない
+    % psi = vars.psi;
 
     z = linspace(env.zmin, env.zmax, env.Nz);
     r = linspace(env.rmin, env.rmax, env.Nr);

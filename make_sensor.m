@@ -31,49 +31,44 @@ function [PARAM, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, POS] = make_sensor(PARA
     if CONFIG.DataType == 'exp'
         BZ = BZ + Bz_EF_at_sensor_b;
         for i = 1:SENSOR_TPRB.NUM
+            % if SENSOR_TPRB.R(i) > 0.5
+            %     SENSOR_TPRB.TET(i) = -pi / 2;
+            % else
+            %     SENSOR_TPRB.TET(i) = pi / 2;
+            % end
             if SENSOR_TPRB.R(i) > 0.5
+                SENSOR_TPRB.TPRB(i) = abs(BZ(i));
                 SENSOR_TPRB.TET(i) = -pi / 2;
             else
+                SENSOR_TPRB.TPRB(i) = abs(BZ(i));
                 SENSOR_TPRB.TET(i) = pi / 2;
             end
         end
-    elseif 1
-for i = 1:SENSOR_TPRB.NUM
-    if SENSOR_TPRB.R(i) <= 0.12
-        % 内側
-        SENSOR_TPRB.TET(i) = pi/2;
-        SENSOR_TPRB.TPRB(i) = BZ(i);
-    elseif (SENSOR_TPRB.Z(i) > -0.95 & SENSOR_TPRB.Z(i) < 0.95)
-        % 外側
-        SENSOR_TPRB.TET(i) = pi/2;
-        SENSOR_TPRB.TPRB(i) = BZ(i);
-    elseif SENSOR_TPRB.Z(i) > 0
-        % 天井
-        SENSOR_TPRB.TET(i) = pi/2;
-        SENSOR_TPRB.TPRB(i) = BR(i);
-    elseif SENSOR_TPRB.Z(i) <= 0
-        % 床
-        SENSOR_TPRB.TET(i) = pi/2;
-        SENSOR_TPRB.TPRB(i) = BR(i);
     else
-        SENSOR_TPRB.R(i)
-    end
-end
+        for i = 1:SENSOR_TPRB.NUM
+            if SENSOR_TPRB.R(i) <= 0.12
+                % 内側
+                SENSOR_TPRB.TET(i) = pi/2;
+                SENSOR_TPRB.TPRB(i) = BZ(i);
+            elseif (SENSOR_TPRB.Z(i) > -0.95 & SENSOR_TPRB.Z(i) < 0.95)
+                % 外側
+                SENSOR_TPRB.TET(i) = pi/2;
+                SENSOR_TPRB.TPRB(i) = BZ(i);
+            elseif SENSOR_TPRB.Z(i) > 0
+                % 天井
+                SENSOR_TPRB.TET(i) = 0;
+                SENSOR_TPRB.TPRB(i) = BR(i);
+            elseif SENSOR_TPRB.Z(i) <= 0
+                % 床
+                SENSOR_TPRB.TET(i) = 0;
+                SENSOR_TPRB.TPRB(i) = BR(i);
+            else
+                SENSOR_TPRB.R(i)
+            end
+        end
     end
 
-    % figure()
-    % % plot(SENSOR_TPRB.TPRB)
-    % hold on
-    % plot(BZ, '-o')
-    % plot(BR, '-o')
-    % legend('BZ', 'BR')
-    % figure()
-    % plot(SENSOR_TPRB.TET, '-o')
-
-    % SENSOR_TPRB.TET(1:SENSOR_TPRB.NUM) = ones(1, SENSOR_TPRB.NUM) .* pi/2; 
-    
-    % SENSOR_TPRB.TPRB = sqrt(BR.^2 + BZ.^2);
-    SENSOR_TPRB.TPRB = BZ;
+    % SENSOR_TPRB.TPRB = BZ;
     SENSOR_TPRB.ITYPE = 1; % 使っていない
 
     %% No NPRB
@@ -90,7 +85,7 @@ end
     end
 
     if CONFIG.DevideFlux
-        SENSOR_FLXLP.FLXLP = FL ./ (pi .* SENSOR_FLXLP.R .* SENSOR_FLXLP.R);
+        SENSOR_FLXLP.FLXLP = FL ./ SENSOR_FLXLP.R.^2 .* 2;
     else
         SENSOR_FLXLP.FLXLP = FL;
     end

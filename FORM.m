@@ -70,7 +70,7 @@ function [FC, BR, BZ, PSIFLX, PSIC, AA, FF] = ...
         cal_starb(rs(ind_FL), zs(ind_FL), rc, zc, 0, 0, 0);
     psi = RMYU0 * ECI * PHI;
     if CONFIG.DevideFlux
-        psi = psi ./ (pi * SENSOR_FLXLP.R.^2);
+        psi = psi ./ SENSOR_FLXLP.R.^2 .* 2;
     end
     FF(ind_FL) = FF(ind_FL) - psi;
     FC(ind_FL) = psi;
@@ -125,8 +125,8 @@ function [FC, BR, BZ, PSIFLX, PSIC, AA, FF] = ...
                 RCCS(i, 2 * j + 1), ZCCS(i, 2 * j + 1) ...
             );
             if CONFIG.DevideFlux
-                GW = GW ./ pi ./ rs(ind_FL).^2;
-                HW = HW ./ pi ./ rs(ind_FL).^2;
+                GW = GW ./ rs(ind_FL).^2 .* 2;
+                HW = HW ./ rs(ind_FL).^2 .* 2;
             end
             ind_CCS_FL1 = NAPB + 1:NAPB + NFLX;
             ind_CCS_FL2 = (1 + 3 * (j - 1):3 * j) + 3 * sum(NE(1:i - 1));
@@ -222,7 +222,7 @@ function [FC, BR, BZ, PSIFLX, PSIC, AA, FF] = ...
                 for j = 1:3
                     KK = 3 * (k - 1) + j;
                     if CONFIG.DevideFlux
-                        EE = GW(j) * AMYU0 / pi / rs(NAPB + i)^2;
+                        EE = GW(j) * AMYU0 / rs(NAPB + i)^2 * 2;
                     else
                         EE = GW(j) * AMYU0;
                     end

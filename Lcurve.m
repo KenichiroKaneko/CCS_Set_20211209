@@ -99,19 +99,19 @@ function KUP = cal_curvature(X, Y, CONFIG);
     if CONFIG.ShowFig
 
         figure()
-        % loglog(residual, P_norm, 's')
+        loglog(X, Y, 's')
         hold on
-        plot(x, y, 's')
-        plot(lx, ly);
+        % plot(x, y, 's')
+        % plot(lx, ly);
         title("L-curve");
-        xlabel("残差 ||Ap^* - q||")
-        ylabel("||p^*||")
+        xlabel("||Dp^* - g||", 'FontWeight','bold')
+        ylabel("||p^*||", 'FontWeight','bold')
         % axis equal
 
-        for i = 5:5:len
-            % text(residual(i), (P_norm(i)), ['\leftarrow', num2str(i)])
-            text(x(i), (y(i)), ['\leftarrow', num2str(i)])
-        end
+        % for i = 5:5:len
+        %     % text(residual(i), (P_norm(i)), ['\leftarrow', num2str(i)])
+        %     text(x(i), (y(i)), ['\leftarrow', num2str(i)])
+        % end
 
     end
 end

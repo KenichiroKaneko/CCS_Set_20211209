@@ -16,6 +16,7 @@ function [FL, BZ, ExtCOIL, Ip] = load_lizzie(PARAM, CONFIG)
     FL_index = [19:42, 18, 44:53];
     % minus_index = [19, 20, 21, 22, 27, 28, 29, 31, 32, 33, 37, 38, 41, 42, 44, 45, 48, 50, 51, 53];
     minus_index = [5,7,8,12,16,17,18,21,29,34,35];
+    minus_index = [];
     FL_num = 35;
 
     for i = 1:FL_num
@@ -34,6 +35,7 @@ function [FL, BZ, ExtCOIL, Ip] = load_lizzie(PARAM, CONFIG)
     BZ_index = [54:93];
     % minus_index = [74, 79, 80, 81, 82, 84, 85, 86, 92];
     minus_index = [21,26,27,28,29,31,32,33,39];
+    minus_index = [];
     BZ_num = 40;
     NS = 242; % コイルの巻き数x断面積
     freq = fftshift((0:BZ_num-1) * 2000000 / BZ_num) - 1000000;
@@ -64,7 +66,7 @@ function [FL, BZ, ExtCOIL, Ip] = load_lizzie(PARAM, CONFIG)
     end
     
     % Ipの読み込み
-    Ip = data(2).sig;
+    Ip = data(1).sig;
     Ip = Ip - mean(Ip(1000:2000));
 
     % コイル電流の読み込み

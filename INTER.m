@@ -10,8 +10,8 @@ function [psi, CCR, CCZ, DELGE, RCCS, ZCCS, XPSI, XBBZ, XBBR] = INTER(PARAM, IGO
     JCRE = 2;
     NINT = 0;
     % % cm単位の範囲の指定
-    % MINR = 10.815;
-    % MAXR = 88.80;
+    MINR = 10.815;
+    MAXR = 88.80;
     % MINZ = -99.85;
     % MAXZ = 99.85;
     % % メッシュの間隔delr,delz

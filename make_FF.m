@@ -1,5 +1,11 @@
 function FF = make_FF(PARAM, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT)
 
+    % figure() 
+    % PARAM.SIGM = 0.03;
+    % hold on
+    % plot([SENSOR_TPRB.TPRB, SENSOR_FLXLP.FLXLP])
+
+    rng(PARAM.SEED)
     if max(SENSOR_TPRB.TPRB) > 0
         e1 = SENSOR_TPRB.TPRB .* PARAM.SIGM .* randn(1, SENSOR_TPRB.NUM);
     else
@@ -15,6 +21,10 @@ function FF = make_FF(PARAM, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT)
     SENSOR_TPRB.TPRB = SENSOR_TPRB.TPRB + e1;
     SENSOR_FLXLP.FLXLP = SENSOR_FLXLP.FLXLP + e2;
 
+
+    % plot([SENSOR_TPRB.TPRB, SENSOR_FLXLP.FLXLP])
+
+    % error('error description', A1)
     FF = [SENSOR_TPRB.TPRB, SENSOR_NPRB.NPRB, (SENSOR_FLXLP.FLXLP ./ 2 ./ pi)];
     FF(end + 1:end + sum(CCSDAT.NCCN)) = 0.0;
 

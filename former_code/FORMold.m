@@ -87,7 +87,7 @@ for L = 1:SENSOR_FLXLP.NUM
     PSIFLX(L) = PSIFLX(L) + sum(PPSIFLX(1:KCMX) .* ECI(1:KCMX) * RMYU0);
     mmm(L) = PSIFLX(L);
     if CONFIG.DevideFlux
-        PSIFLX(L) = PSIFLX(L) / pi / SENSOR_FLXLP.R(L)^2;
+        PSIFLX(L) = PSIFLX(L) / SENSOR_FLXLP.R(L)^2 .* 2;
     end
 
     FF(L + NAPB) = FF(L + NAPB) - PSIFLX(L); %! 下駄処理を含む
@@ -171,8 +171,8 @@ for III = 1:CCS
             [HW, GW, GR, GZ, HR, HZ] = INTEGS(RS(I), ZS(I), RCCS(III, 2 * K - 1), ZCCS(III, 2 * K - 1), RCCS(III, 2 * K), ZCCS(III, 2 * K), RCCS(III, 2 * K + 1), ZCCS(III, 2 * K + 1)); % OK
             % mmm(I) = GW(1);
             if CONFIG.DevideFlux
-                GW = GW / pi / RS(I)^2;
-                HW = HW / pi / RS(I)^2;
+                GW = GW / RS(I)^2 * 2;
+                HW = HW / RS(I)^2 * 2;
             end
 
             for JJ = 1:3
@@ -294,7 +294,7 @@ else
                 for JJ = 1:3
 
                     if CONFIG.DevideFlux
-                        EE = GW(JJ) * AMYU0 / pi / A^2; %  2021/05/30
+                        EE = GW(JJ) * AMYU0 / A^2 * 2; %  2021/05/30
                     else
                         EE = GW(JJ) * AMYU0; % ! flux*AMYU0
                     end
@@ -388,7 +388,7 @@ else
                     KK = 3 * (K - 1) + JJ;
 
                     if CONFIG.DevideFlux
-                        EE = GW(JJ) * AMYU0 / pi / A^2; %  2021/05/30
+                        EE = GW(JJ) * AMYU0 / A^2 * 2; %  2021/05/30
                     else
                         EE = GW(JJ) * AMYU0; %      ! flux*AMYU0
                     end
