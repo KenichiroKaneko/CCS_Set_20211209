@@ -16,6 +16,24 @@ function WALL = loadwalldata2(PARAM, CONFIG)
         % MSEC = [0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 2, 0];
         % MSEC = ones(MAXM);
 
+
+
+        % 配置1
+        % RSEC_list = [0.69, 0.69, 0.59, 0.59, 0.10];
+        % RSEC_list = [RSEC_list, 0.10, fliplr(RSEC_list)];
+        % ZSEC_list = [0.00, 0.285, 0.285, 1.0, 1.0];
+        % ZSEC_list = [ZSEC_list, 0, -fliplr(ZSEC_list)];
+        % MAXM = length(RSEC_list) - 1;
+        % MSEC = [PARAM.eddyNodes fliplr(PARAM.eddyNodes)];
+
+        % 配置2
+        RSEC_list = [0.694, 0.694, 0.5985, 0.5985, 0.5985, 0.10185, 0.10185];
+        RSEC_list = [RSEC_list, fliplr(RSEC_list)];
+        ZSEC_list = [0.0, 0.285, 0.285, 0.435, 0.9985, 0.9985, 0.6];
+        ZSEC_list = [ZSEC_list, -fliplr(ZSEC_list)];
+        MAXM = length(RSEC_list) - 1;
+        MSEC = [PARAM.eddyNodes fliplr(PARAM.eddyNodes(1:end-1))];
+
         for i = 1:MAXM + 1
             RSEC(i) = RSEC_list(i);
             ZSEC(i) = ZSEC_list(i);
@@ -23,6 +41,8 @@ function WALL = loadwalldata2(PARAM, CONFIG)
 
         RWALL_list = [0.694, 0.694, 0.5985, 0.5985, 0.10185];
         ZWALL_list = [0, 0.285, 0.285, 0.9985, 0.9985];
+        % RWALL_list = [0.69, 0.59, 0.59, 0.10];
+        % ZWALL_list = [0.3, 0.3, 1, 1];
 
     else
         % UTSTは外側で渦電流が流れにくいので渦電流ノードを一部消す
@@ -67,8 +87,10 @@ function WALL = loadwalldata2(PARAM, CONFIG)
             ZSEC(i) = ZSEC_list(i);
         end
 
-        RWALL_list = [0.694, 0.5985, 0.5985, 0.10185];
-        ZWALL_list = [0.285, 0.285, 0.9985, 0.9985];
+        % RWALL_list = [0.694, 0.5985, 0.5985, 0.10185];
+        % ZWALL_list = [0.285, 0.285, 0.9985, 0.9985];
+        RWALL_list = [0.69, 0.59, 0.59, 0.10];
+        ZWALL_list = [0.3, 0.3, 1, 1];
 
     end
 

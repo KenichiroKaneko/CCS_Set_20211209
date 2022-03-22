@@ -2,7 +2,41 @@ function [FL, BZ, ExtCOIL, Ip] = load_lizzie(PARAM, CONFIG)
     % バイナリデータをセンサーごとに読み込む
     % ここでは再構成する時間に合わせてデータを切り出さない
 
-    data = UTSTdataload(PARAM.input_file_directory, PARAM.date, PARAM.shotnum, 'NJ');
+    data = UTSTdataload(PARAM.utst_file_directory, PARAM.date, PARAM.shotnum, 'NJ');
+
+    % 数値解で外部コイル電流入力するために大改造した部分
+    if 1 %CONFIG.DataType == 'sol'
+        % コイル電流の読み込み
+        EF_voltage = 120;
+        ExtCOIL.NUM = 10;
+        ExtCOIL.NAME = ["EFL", "EFU", "PF1L", "PF1U", "PF2L", "PF2U", "PF3L", "PF3U", "PF4L", "PF4U"];
+        ExtCOIL.R = [0.80, 0.80, 0.20, 0.20, 0.665, 0.665, 0.750, 0.750, 0.685, 0.685];
+        ExtCOIL.Z = [-1.07, 1.07, -1.10, 1.10, -0.80, 0.80, -0.675, 0.675, -0.50, 0.50];
+        ExtCOIL.C = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+        ExtCOIL.N = [200, 200, 8, 8, 3, 3, 8, 8, 3, 3];
+        ExtCOIL.I = [0.28, 0.28, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+        ExtCOIL.I(1) =- (0.849 * (1.19 * EF_voltage - 5.32) - 5.56) / 1000;
+        ExtCOIL.I(2) =- (0.849 * (1.19 * EF_voltage - 5.32) - 5.56) / 1000;
+
+        % データ（NJ）はUpper→Lowerの順だが、CCSコードの内部ではLower→Upperの順で読み込んでいるので
+        % インデックスに気をつけて読み込んでいる
+        PF_index = [3, 2, 5, 4, 7, 6, 16, 8];
+
+        for i = 1:8
+            % ExtCOIL.I_sig(i, :) = smoothdata(data(PF_index(i)).sig, 'gaussian', 200);
+            ExtCOIL.I_sig(i, :) = data(PF_index(i)).sig;
+        end
+        FL = []; BZ = []; Ip = [];
+        % return
+    end
+
+    figure()
+    hold on
+    plot(ExtCOIL.I_sig(5, :))
+    plot(ExtCOIL.I_sig(6, :))
+    hold off
+
+    error('error description', A1)
 
     if CONFIG.CalibPF3
         [calib_FL, calib_BZ, FL_PF3_t, BZ_PF3_t] = calib_TF3(PARAM);
@@ -68,26 +102,6 @@ function [FL, BZ, ExtCOIL, Ip] = load_lizzie(PARAM, CONFIG)
     % Ipの読み込み
     Ip = data(1).sig;
     Ip = Ip - mean(Ip(1000:2000));
-
-    % コイル電流の読み込み
-    EF_voltage = 120;
-    ExtCOIL.NUM = 10;
-    ExtCOIL.NAME = ["EFL", "EFU", "PF1L", "PF1U", "PF2L", "PF2U", "PF3L", "PF3U", "PF4L", "PF4U"];
-    ExtCOIL.R = [0.80, 0.80, 0.20, 0.20, 0.665, 0.665, 0.750, 0.750, 0.685, 0.685];
-    ExtCOIL.Z = [-1.07, 1.07, -1.10, 1.10, -0.80, 0.80, -0.675, 0.675, -0.50, 0.50];
-    ExtCOIL.C = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
-    ExtCOIL.N = [200, 200, 8, 8, 3, 3, 8, 8, 3, 3];
-    ExtCOIL.I = [0.28, 0.28, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
-    ExtCOIL.I(1) =- (0.849 * (1.19 * EF_voltage - 5.32) - 5.56) / 1000;
-    ExtCOIL.I(2) =- (0.849 * (1.19 * EF_voltage - 5.32) - 5.56) / 1000;
-
-    % データ（NJ）はUpper→Lowerの順だが、CCSコードの内部ではLower→Upperの順で読み込んでいるので
-    % インデックスに気をつけて読み込んでいる
-    PF_index = [3, 2, 5, 4, 7, 6, 16, 8];
-
-    for i = 1:8
-        ExtCOIL.I_sig(i, :) = smoothdata(data(PF_index(i)).sig, 'gaussian', 200);
-    end
 
     % この辺で信号処理する予定
     %

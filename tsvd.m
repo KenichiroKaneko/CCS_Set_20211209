@@ -6,6 +6,10 @@ function FFout = tsvd(PARAM, CONFIG, A, FF, FC, ...
     GAM0 = 0;
 
     [M, N] = size(A); % 未知数、既知数
+    if (M < N)
+        disp([M N])
+        error('You must augment A with extra zero rows.', N)
+    end
     if CONFIG.ShowFig
         disp(['既知数 : ' num2str(M) '   未知数 : ' num2str(N)])
     end

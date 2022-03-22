@@ -8,12 +8,13 @@ function [PARAM, CONFIG] = define_params(type)
     CONFIG.DevideFlux = 1;
     CONFIG.AutoCCSZPos = 0;
     CONFIG.AutoCCSRPos = 0;
-    CONFIG.ShowFig = 1;
+    CONFIG.ShowFig = 0;
     CONFIG.ShowFig2 = 0;
     CONFIG.CalibTF = 1;
     CONFIG.CalibPF3 = 0;
     CONFIG.RevSenPos = 1;
-    CONFIG.Nmrz = 'norm';
+    CONFIG.Nmrz = 'no';
+    CONFIG.WithExpCoil = 0;
 
     % file direcory
     PARAMNUM = 1;
@@ -23,45 +24,64 @@ function [PARAM, CONFIG] = define_params(type)
     PARAM.temporary_file_directory = './temp';
     PARAM.output_file_directory = './output';
     PARAM.num_sol_name = '/UTST_numel_2033'; PARAM.CCS = 1; z = 0;
+    % PARAM.num_sol_name = '/UTST_numel_201_80'; PARAM.CCS = 1; z = 0;
     % PARAM.num_sol_name = '/UTST_numel_0600Ip50'; PARAM.CCS = 2; % dame
     % PARAM.num_sol_name = '/UTST_numel_0640Ip50'; PARAM.CCS = 2; % dame
     % PARAM.num_sol_name = '/UTST_numel_0720Ip50'; PARAM.CCS = 2; z = 0.48; p = [0.2, 0.045, 3];
     % PARAM.num_sol_name = '/UTST_numel_0760Ip50'; PARAM.CCS = 2; z = 0.44; p = [0.22, 0.045, 3];
     % PARAM.num_sol_name = '/UTST_numel_0800Ip50'; PARAM.CCS = 2; z = 0.42; p = [0.22, 0.06, 3];
-    % PARAM.num_sol_name = '/UTST_numel_0840Ip50'; PARAM.CCS = 2; z = 0.39; p = [0.22, 0.058, 3];
+    % PARAM.num_sol_name = '/UTST_numel_0840Ip50'; PARAM.CCS = 2; z = 0.39; p = [0.22, 0.057, 3];
     % PARAM.num_sol_name = '/UTST_numel_0880Ip50'; PARAM.CCS = 2; z = 0.355; p = [0.22, 0.055, 3];
     % PARAM.num_sol_name = '/UTST_numel_0920Ip50'; PARAM.CCS = 2; z = 0.32; p = [0.22, 0.057, 3];
     % PARAM.num_sol_name = '/UTST_numel_1000Ip50'; PARAM.CCS = 2; z = 0.253; p = [0.25, 0.06, 3];
     % PARAM.num_sol_name = '/UTST_numel_1200Ip50'; % dame
     PARAM.MP_pos = "/CCS_sensor_position_opt.txt";
-    PARAM.FL_pos = "/CCS_sensor_position_opt.txt";
-    % PARAM.MP_pos = "/CCS_MP_sensor_position_i.txt";
-    % PARAM.FL_pos = "/CCS_FLXLP_sensor_position_i.txt";
+    % PARAM.FL_pos = "/CCS_sensor_position_opt.txt"; CONFIG.RevSenPos = 1;
+    PARAM.MP_pos = "/CCS_MP_sensor_position_kk.txt";
+    % PARAM.FL_pos = "/CCS_FLXLP_sensor_position_i.txt"; CONFIG.RevSenPos = 0;
+    PARAM.FL_pos = "/CCS_FLXLP_2022.txt"; CONFIG.RevSenPos = 0;
 
     % shot param
     % PARAM.shotnum = '010';
     % PARAM.shotnum_TF = '002';
     % PARAM.date = '211217';
 
-    PARAM.shotnum = '004';
+    PARAM.shotnum = '003';
     PARAM.shotnum_TF = '002';
     PARAM.date = '211217';
-
     PARAM.shotnum_PF3 = '003';
     PARAM.date_calib_PF3 = '211217';
-
-    PARAM.time_CCS = '9605';
+    PARAM.time_CCS = '9580';
 
     % 使わないセンサー
     PARAM.dead_BZ = [19, 20,27, 32, 39, 40];
     PARAM.dead_FL = [1,6,22,25,27,28,30,31,32];
+    PARAM.dead_FL = [46:62];
     PARAM.dead_FL = [];
     PARAM.dead_BZ = [];
 
     % 打切り項数（０でLcurve法）
     PARAM.KUP = 44;
     PARAM.KUP = 85;
-    PARAM.KUP = 75;
+    PARAM.KUP = 0;
+
+    % 合体前
+    % PARAM.eddyNodes = [1 1 1 2 2 2 2]; % LCFS残差が最小（外部コイルなし）
+    % PARAM.eddyNodes = [2 1 2 1 2 2 2]; % 残差が最小（外部コイルなし）
+    % PARAM.eddyNodes = [1 1 1 2 1 1 2]; % LCFS残差が最小
+    % PARAM.eddyNodes = [2 1 2 1 2 2 2]; % 残差が最小
+    % 合体前
+    % PARAM.eddyNodes = [2 1 1 2 2 2 2]; % LCFS残差が最小（外部コイルなし）
+    % PARAM.eddyNodes = [2 2 2 1 2 2 2]; % 残差が最小（外部コイルなし）
+    % PARAM.eddyNodes = [1 1 1 2 2 2 1]; % LCFS残差が最小
+    % PARAM.eddyNodes = [2 1 1 2 2 2 2]; % 残差が最小
+    % 合体後
+    % PARAM.eddyNodes = [1 2 1 2 1 1 2]; % LCFS残差が最小（外部コイルなし）
+    % PARAM.eddyNodes = [1 2 2 1 2 2 2]; % 残差が最小（外部コイルなし）
+    % PARAM.eddyNodes = [1 1 2 2 1 1 1]; % LCFS残差が最小
+    % PARAM.eddyNodes = [1 2 2 2 2 2 1]; % 残差が最小
+    PARAM.eddyNodes = [1 1 1 3 1 1 2];
+    % PARAM.eddyNodes = [1 1 3 1 1 1 3];
 
     % CCS parameters
     PARAM.IUTST = 5;
@@ -83,7 +103,7 @@ function [PARAM, CONFIG] = define_params(type)
     if PARAM.CCS == 1
         PARAM.IDECCS = 1; % D型のCCS
         i = 1;
-        PARAM.R0(i) = 0.34;
+        PARAM.R0(i) = 0.36;
         PARAM.Z0(i) = 0;
         PARAM.RR(i) = 0.05;
         PARAM.CAPPER(i) = 1.6;

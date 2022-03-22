@@ -33,6 +33,24 @@ function show_results(PARAM, CONFIG, CCR, CCZ, CCSDAT, REF, psi, SENSOR_TPRB, SE
             legend({}, 'Location', 'eastoutside','FontSize',14)
         end
     end
+    if CONFIG.WithExpCoil == 1
+        xlabel('Time [ms]');
+        ylabel('Current [kA]');
+        figure('Name', 'Coil Current')
+        time = (1:30000)*5e-4;
+        hold on
+        for i = 1:4
+            j = i*2-1;
+            subplot(4,1,i)
+            hold on
+            plot(time, ExtCOIL.I_sig(j,:), 'r', 'DisplayName', ['Smoothed PF #' num2str(i) 'L'])
+            plot(time, ExtCOIL.I_sig(j+1,:), 'b', 'DisplayName', ['Smoothed PF #' num2str(i) 'U'])
+            xline(time(t), 'k')
+            xlim([8.5, 10.5])
+            ylim([-60, 70])
+            legend({}, 'Location', 'eastoutside','FontSize',14)
+        end
+    end
 
     % 渦電流再構成結果の表示
     figure('Name', 'Eddy Current Plofile', 'NumberTitle', 'off')
@@ -51,16 +69,16 @@ function show_results(PARAM, CONFIG, CCR, CCZ, CCSDAT, REF, psi, SENSOR_TPRB, SE
     figure('Name', 'Sensor position')
     subplot(1,2,1)
     hold on
-    % t = 1:SENSOR_TPRB.NUM; t = num2str(t');
-    % text(SENSOR_TPRB.R, SENSOR_TPRB.Z, t)
+    t = 1:SENSOR_TPRB.NUM; t = num2str(t');
+    text(SENSOR_TPRB.R, SENSOR_TPRB.Z, t)
     plot(SENSOR_TPRB.R, SENSOR_TPRB.Z, 'ro')
     plot(WALL.RWALL_list, WALL.ZWALL_list, '-k'); % 容器壁 VacuumVesselMeshPoints
     title('Magnetic probe')
     axis equal
     subplot(1,2,2)
     hold on
-    % t = 1:SENSOR_FLXLP.NUM; t = num2str(t');
-    % text(SENSOR_FLXLP.R, SENSOR_FLXLP.Z, t)
+    t = 1:SENSOR_FLXLP.NUM; t = num2str(t');
+    text(SENSOR_FLXLP.R, SENSOR_FLXLP.Z, t)
     plot(SENSOR_FLXLP.R, SENSOR_FLXLP.Z, 'bo')
     plot(WALL.RWALL_list, WALL.ZWALL_list, '-k'); % 容器壁 VacuumVesselMeshPoints
     title('Flux loop')
@@ -114,18 +132,61 @@ function show_results(PARAM, CONFIG, CCR, CCZ, CCSDAT, REF, psi, SENSOR_TPRB, SE
     ylabel({'z (m)'});
     title("Reconstructed flux")
     axis equal
-    % var = load('vars_CCS_temp');
+
+    % % var = load('vars_CCS_temp');
     % figure()
     % hold on
     % v = linspace(-20, 20, 101);
-    % contour(REF.R, REF.Z, REF.Flux*1000, v, 'k'); % 正解;
-    % contour (REF.R, REF.Z, REF.Flux, [0 0], 'k', 'LineWidth', 2, 'DisplayName', 'Reference');
-    % contour(CCR, CCZ, psi, [0 0], 'm', 'LineWidth', 2, 'DisplayName', '0% Noise');
-    % contour(CCR, CCZ, var.psi, [0 0], 'c', 'LineWidth', 2, 'DisplayName', '3% Noise');
+    % % contour(REF.R, REF.Z, REF.Flux*1000, v, 'k'); % 正解;
+    % % contour (REF.R, REF.Z, REF.Flux, [0 0], 'k', 'LineWidth', 2, 'DisplayName', 'Reference');
+    % contour(CCR, CCZ, psi*1000, v,'k');
+    % contour(CCR, CCZ, psi, [0 0], 'k', 'LineWidth', 2, 'DisplayName', '0% Noise');
     % plot(WALL.RWALL_list, WALL.ZWALL_list, '-k'); % 容器壁 VacuumVesselMeshPoints
     % % legend();
     % xlabel({'r (m)'});
     % ylabel({'z (m)'});
     % axis equal
+
+    % figure()
+    % hold on
+    % v = linspace(-20, 20, 101);
+    % contour(REF.R, REF.Z, REF.Flux*1000, v, 'k'); % 正解;
+    % contour (REF.R, REF.Z, REF.Flux, [0 0], 'm', 'LineWidth', 2, 'DisplayName', 'Reference');
+    % contour(CCR, CCZ, psi, [0 0], 'c', 'LineWidth', 2, 'DisplayName', '0% Noise');
+    % plot(WALL.RWALL_list, WALL.ZWALL_list, '-k'); % 容器壁 VacuumVesselMeshPoints
+    % % legend();
+    % xlabel({'r (m)'});
+    % ylabel({'z (m)'});
+    % axis equal
+
+    REFmini = imresize(REF.Flux, size(psi));
+    figure()
+    subplot(1,2,1)
+    hold on
+    % contour(CCR, CCZ, REFmini*1000, v)
+    % contour(CCR, CCZ, REFmini*1000, [0 0], 'LineColor', 'm', 'LineWidth', 2);
+    % contour(CCR, CCZ, psi, [0 0], 'k', 'LineWidth', 2)
+    plot(WALL.REV, WALL.ZEV, 'ko', 'MarkerFaceColor', 'k', 'MarkerSize', 8) % VacuumVesselNodePoints
+    plot(WALL.RSEC, WALL.ZSEC, 'mo', 'MarkerSize', 16) % VacuumVesselSegments
+    plot(WALL.RWALL_list, WALL.ZWALL_list, '-k'); % 容器壁 VacuumVesselMeshPoints
+    % legend();
+    xlabel({'r (m)'});
+    ylabel({'z (m)'});
+    axis equal
+    hold off;
+    subplot(1,2,2)
+    hold on
+    contour(CCR, CCZ, REFmini*1000, v, 'm'); % 正解;
+    contour(CCR, CCZ, REFmini*1000, [0 0], 'm', 'LineWidth', 2);
+    contour(CCR, CCZ, psi*1000, v,'k');
+    contour(CCR, CCZ, psi, [0 0], 'LineColor', 'c', 'LineWidth', 2);
+    plot(WALL.RWALL_list, WALL.ZWALL_list, '-k'); % 容器壁 VacuumVesselMeshPoints
+    hold off
+    xlabel({'r (m)'});
+    ylabel({'z (m)'});
+    title("Reconstructed flux")
+    axis equal
+
+
 
 end

@@ -28,9 +28,9 @@ FL_t = sprintf(repmat('% 3d', [1, length(FL_i)]), FL_i);
 err_t = sprintf('   %.5e', GA.pool(I).err);
 disp([err_t BZ_t FL_t]);
 
-state = '1月21日の早朝に初めて20個の遺伝子を4000代までやったやつ';
+state = '3月1日三井GH';
 
-save('vars_GA_0122')
+save('vars_GA_0301')
 % error('error description', A1)
 
 

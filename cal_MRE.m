@@ -22,11 +22,14 @@ function cal_MRE(PARAM, CONFIG, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, 
     indexCCS_r = indexCCS_l + NCCN - 1;
 
     % RE = ((A * X - FC') ./ FC').^2;
-    RE = abs(A * X - FF');
+    RE = (A * X - FF');
 
-    MREAPB = norm(RE(indexB_l:indexB_r)) / NAPB;
-    MREFlux = norm(RE(indexFL_l:indexFL_r)) / NFLX;
-    MRECCS = norm(RE(indexCCS_l:indexCCS_r)) / NCCN;
+    % MREAPB = norm(RE(indexB_l:indexB_r)) / NAPB;
+    % MREFlux = norm(RE(indexFL_l:indexFL_r)) / NFLX;
+    % MRECCS = norm(RE(indexCCS_l:indexCCS_r)) / NCCN;
+    MREAPB = norm(RE(indexB_l:indexB_r));
+    MREFlux = norm(RE(indexFL_l:indexFL_r));
+    MRECCS = norm(RE(indexCCS_l:indexCCS_r));
 
     MREs = [MREAPB, MREFlux, MRECCS];
     % disp(MREs);
@@ -35,7 +38,9 @@ function cal_MRE(PARAM, CONFIG, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, 
         txt1 = sprintf("Probe Sensor  Num:%4d  MRE:%.3e\n", NAPB, MREAPB);
         txt2 = sprintf("Flux  Sensor  Num:%4d  MRE:%.3e\n", NFLX, MREFlux);
         txt3 = sprintf("CCS Node      Num:%4d  MRE:%.3e\n", NCCN, MRECCS);
-        disp(txt1 + txt2 + txt3)
+        txt4 = sprintf("残差: %.3e\n", norm(A*X-FF'));
+
+        disp(txt1 + txt2 + txt3 + txt4)
     end
 
 

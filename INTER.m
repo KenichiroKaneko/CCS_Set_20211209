@@ -2,16 +2,17 @@ function [psi, CCR, CCZ, DELGE, RCCS, ZCCS, XPSI, XBBZ, XBBR] = INTER(PARAM, IGO
      SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, WALL)
     
     % % 再構成する磁束のサイズ
-    MINR = 10;
-    MAXR = 90;
-    MINZ = -100;
-    MAXZ = 100;
+    MINR = 11;
+    MAXR = 70;
+    MINZ = -99;
+    MAXZ = 99;
     ICRE = 1;
     JCRE = 2;
     NINT = 0;
     % % cm単位の範囲の指定
-    MINR = 10.815;
-    MAXR = 88.80;
+    % MINR = 10.815;
+    % MAXR = 88.80;
+    % MAXR = 69.4;
     % MINZ = -99.85;
     % MAXZ = 99.85;
     % % メッシュの間隔delr,delz

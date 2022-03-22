@@ -31,26 +31,32 @@ function [FF, FC, AA, factors] = weight(CONFIG, FF, FC, AA, SENSOR_NPRB, SENSOR_
     
     
     %% Modified_MI 20211103
-    ind_FLXLP_IN = 40:58;
-    ind_FLXLP_OUT = 59:74;
-    %% Modified_MI 20211103 kokomade
+    ind_B_IN = 1:18;
+    ind_B_OUT = 20:39;
+    ind_FLXLP_IN = [1:19] + SENSOR_TPRB.NUM + SENSOR_NPRB.NUM;
+    ind_FLXLP_OUT = [21:34] + SENSOR_TPRB.NUM + SENSOR_NPRB.NUM;
+    size(FF);
+    %% Modified_MI 20211103 kokomade    
 
     switch CONFIG.Nmrz
-        case 'abe'
+        case 'ave'
             % 平均が１になるように規格化→センサー信号が全て０付近の場合悪くなりそう
             bfactor = 1 / mean(FF(ind_b));
             fluxfactor = 1 / mean(FF(ind_FLXLP));
-            ccsfactor = 1 / mean(FF(ind_CCS));
+            % ccsfactor = 1 / mean(FF(ind_CCS));
+            ccsfactor = 1;
         case 'max'
             % 絶対値の最大値が１になるように規格化
             bfactor = 1 / max(abs(FF(ind_b)));
             fluxfactor = 1 / max(abs(FF(ind_FLXLP)));
-            ccsfactor = 1 / max(abs(FF(ind_CCS)));
+            % ccsfactor = 1 / max(abs(FF(ind_CCS)));
+            ccsfactor = 1;
         case 'norm'
             % ノルムで割る規格化
             bfactor = 1 / norm(FF(ind_b), 1);
             fluxfactor = 1 / norm(FF(ind_FLXLP), 1);
-            ccsfactor = 1 / norm(FF(ind_CCS), 1);
+            ccsfactor = 1;
+            % ccsfactor = 1 / norm(FF(ind_CCS), 1);
         case '10'
             % 手動の規格化
             bfactor = 1;

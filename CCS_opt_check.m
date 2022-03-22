@@ -1,5 +1,5 @@
 % CCS
-clear all; close all;
+% clear all; close all;
 type = 'sol';
 [PARAM, CONFIG] = define_params(type);
 PARAM.MP_pos = "/CCS_sensor_position_opt.txt";
@@ -10,6 +10,11 @@ CONFIG.ShowFig = 1;
 [FL, BZ, BR, ExtCOIL, REF, JEDDY, POS] = load_num_sol(PARAM, CONFIG); % OK
 t = 0; Ip = 0;
 [PARAM, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP] = make_sensor(PARAM, CONFIG, BZ, BR, FL, POS);
+if CONFIG.WithExpCoil == 1
+    [FL, BZ, ExtCOIL, Ip] = load_lizzie(PARAM, CONFIG);
+    t = round((str2double(PARAM.time_CCS)) / 0.5);
+    ExtCOIL.I(3:10) = ExtCOIL.I_sig(1:8, t);
+end
 CCSDAT = make_CCS(PARAM);
 WALL = loadwalldata2(PARAM, CONFIG);
 
@@ -31,6 +36,8 @@ ind_FL = [8 10 12 13 14 15 16 20 25 28 29 30 31 32 35 39 44 51 52];
 
 ind_BZ = [1  5  9 10 13 15 18 19 20 25 29 37 39 41 42 43 46 49 51]; % BZの制限なし
 ind_FL = [2  3  4  5  7  9 10 12 14 19 20 21 22 24 31 35 39 45 49];
+% ind_BZ = [1  3  6 10 18 24 25 26 27 29 30 33 38 44 46 47 48 50];
+% ind_FL = [2  8  9 14 15 16 17 18 21 26 33 34 35 36 38 40 44 49 51];
 % ind_BZ = [2 3:3:51 52];
 % ind_FL = [2 3:3:51 52];
 FLgene(ind_FL) = 1;

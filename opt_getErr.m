@@ -23,7 +23,7 @@ function [obj, err] = opt_getErr(obj, temp)
     for i = 1:length(refs)
 
         load(['./vars_opt/'+ refs(i)], 'PARAM', 'CONFIG', 'FFout', 'SENSOR_TPRB', 'SENSOR_NPRB', 'SENSOR_FLXLP', 'CCSDAT', 'ExtCOIL', 'WALL');
-        CONFIG.ShowFig = 0;
+        CONFIG.ShowFig = 0;CONFIG.ShowFig2 = 0;
         % SENSORを作り直す
         SENSOR_TPRB.R = SENSOR_TPRB.R(ind_BZ);
         SENSOR_TPRB.Z = SENSOR_TPRB.Z(ind_BZ);
@@ -42,7 +42,7 @@ function [obj, err] = opt_getErr(obj, temp)
         ExtCOIL, SENSOR_TPRB, SENSOR_NPRB, SENSOR_FLXLP, CCSDAT, WALL);
 
         % 重み付け
-        [FF, FC, AA, factors] = weight(FF,FC,AA,SENSOR_NPRB,SENSOR_TPRB,SENSOR_FLXLP,CCSDAT);
+        % [FF, FC, AA, factors] = weight(FF,FC,AA,SENSOR_NPRB,SENSOR_TPRB,SENSOR_FLXLP,CCSDAT);
 
         % 逆問題を解く
         FFout_ = tsvd(PARAM, CONFIG, AA, FF, FC, ...

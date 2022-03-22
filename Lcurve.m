@@ -34,6 +34,10 @@ function KUP = Lcurve(PARAM, CONFIG, A, W, V, U, B)
         P_norm(i) = norm(P_solved).^2;
     end
 
+
+    % figure('Name', '特異値')
+    % semilogy(1:75, W)
+
     KUP = cal_curvature(residual, P_norm, CONFIG);
 end
 
@@ -44,7 +48,7 @@ function KUP = cal_curvature(X, Y, CONFIG);
 
     % 前後の無視する数/点群の数、num < cut
     low_cut = 40;
-    high_cut = 1;
+    high_cut = 0;
     num = 1;
 
     len = length(X);
@@ -102,7 +106,7 @@ function KUP = cal_curvature(X, Y, CONFIG);
         loglog(X, Y, 's')
         hold on
         % plot(x, y, 's')
-        % plot(lx, ly);
+        plot(X(KUP), Y(KUP), 'mo', 'MarkerSize', 8);
         title("L-curve");
         xlabel("||Dp^* - g||", 'FontWeight','bold')
         ylabel("||p^*||", 'FontWeight','bold')
@@ -110,8 +114,9 @@ function KUP = cal_curvature(X, Y, CONFIG);
 
         % for i = 5:5:len
         %     % text(residual(i), (P_norm(i)), ['\leftarrow', num2str(i)])
-        %     text(x(i), (y(i)), ['\leftarrow', num2str(i)])
+        %     text(X(i), (Y(i)), ['\leftarrow', num2str(i)])
         % end
 
     end
+    % error('error description', A1)
 end
